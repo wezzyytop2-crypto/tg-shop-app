@@ -82,19 +82,24 @@ tg.MainButton.onClick(() => {
     tg.MainButton.hide();
 });
 
-// Логика кнопки "Купить" (ОБНОВЛЕНО: Добавлена связь с продавцом)
+// Логика кнопки "Купить" (ОБНОВЛЕНО: Добавлена проверка WebAppMethodUnsupported)
 function buyProduct(id, name, price) {
-    const sellerUsername = 'ulans_sttore'; // Имя пользователя продавца
+    const sellerUsername = 'ulans_sttore';
 
-    // Формируем сообщение для продавца (которое он увидит при открытии чата)
+    // Формируем сообщение для продавца
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
 
-    // Создаем ссылку для открытия чата с предзаполненным текстом
+    // Создаем ссылку для открытия чата
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    // Заставляем Telegram Mini App открыть эту ссылку
-    tg.openTelegramLink(telegramUrl);
-
-    // Опционально: показываем уведомление
-    tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
+    // *** КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: ПРОВЕРКА НА ПОДДЕРЖКУ ФУНКЦИИ ***
+    if (tg && tg.openTelegramLink) {
+        // Если запущено в Telegram Mini App, используем специальный метод
+        tg.openTelegramLink(telegramUrl);
+        tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
+    } else {
+        // Если запущено в обычном браузере, используем обычный переход
+        window.open(telegramUrl, '_blank');
+        tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Если чат не открылся, проверьте его вручную.`);
+    }
 }
