@@ -4,35 +4,28 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// --- НОВЫЙ БЛОК: УСТАНОВКА ФИРМЕННЫХ ЦВЕТОВ ---
-
-// Фирменный Оранжевый цвет вашего логотипа
-const mainColor = '#FF9900';
-const headerColor = '#FF9900';
+// --- НОВЫЙ БЛОК: УСТАНОВКА МЯГКИХ ЦВЕТОВ ---
+const mainColor = '#E6B34A'; // Спокойный золотисто-желтый
+const headerColor = '#E6B34A';
 
 tg.setHeaderColor(headerColor);
 tg.MainButton.setParams({
     color: mainColor
 });
-
 // ---------------------------------------------
 
-
-// --- 1. Данные: Список ваших товаров (С ПОЛЕМ image ТОЛЬКО ДЛЯ 5 ТОВАРОВ) ---
+// --- 1. Данные: Список ваших товаров (С ИСПРАВЛЕННЫМИ ИМЕНАМИ ФАЙЛОВ) ---
 const products = {
 
     hoodies_sweats: [
-        // Худи Essentials - ФОТО НЕТ
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Новое, с бирками." },
-        // Черное Zip-Худи Polo - ФОТО ЕСТЬ
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "Черное худи на молнии.", image: "images/polo_zip_hoodie.jpg" },
-        // Серое Zip-Худи Burberry - ФОТО ЕСТЬ
-        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Светло-серое, подкладка в клетку.", image: "images/burberry_zip_hoodie.jpg" }
+        // Zip-худи 'Polo Ralph Lauren' - Исправлено имя файла
+        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "Черное худи на молнии.", image: "images/zip-hoofie_ralph.png" },
+        // Zip-худи 'Burberry' - Исправлено имя файла
+        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Светло-серое, подкладка в клетку.", image: "images/zip-hoodie_burberry.jpg" }
     ],
     t_shirts: [
-        // Футболка Bape - ФОТО НЕТ (ХОТЯ ФОТО image_f53370.jpg БЫЛО ЗАГРУЖЕНО, Я ЕГО НЕ ВКЛЮЧАЮ ПО ЗАПРОСУ)
         { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "Чёрная футболка Bape." },
-        // Футболка Stussy - ФОТО НЕТ
         { id: 402, name: "Футболка 'Stussy' (Базовая)", price: 3200, size: "S", description: "Черный цвет, новый дроп." }
     ],
 
@@ -41,15 +34,15 @@ const products = {
     sneakers: [],
 
     accessories: [
-        // Рюкзак Supreme (Серебро) - ФОТО ЕСТЬ
-        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Продан. Металлический цвет.", image: "images/supreme_backpack_silver.jpg" },
-        // Рюкзак Supreme (Черный) - ФОТО ЕСТЬ
-        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Продан. Черный, с белым лого.", image: "images/supreme_backpack_black.jpg" },
-        // Ремень Gucci - ФОТО НЕТ
+        // Рюкзак 'Supreme' (Серебро) - Исправлено имя файла
+        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Продан. Металлический цвет.", image: "images/bag_supreme_silver.png" },
+        // Рюкзак 'Supreme' (Черный) - Исправлено имя файла
+        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Продан. Черный, с белым лого.", image: "images/bag_supreme_black.png" },
+        // Ремень 'Gucci'
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Продан. Черный ремень, черная пряжка." },
-        // Сумка Lacoste - ФОТО ЕСТЬ
-        { id: 504, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Продана. Маленькая сумка-мессенджер.", image: "images/lacoste_bag.jpg" },
-        // Очки Chrome Hearts - ФОТО НЕТ
+        // Сумка 'Lacoste' - Исправлено имя файла
+        { id: 504, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Продана. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
+        // Очки 'Chrome Hearts'
         { id: 505, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Черная оправа." }
     ]
 };
@@ -58,7 +51,6 @@ const products = {
 
 function showCategory(categoryKey) {
     const categoryProducts = products[categoryKey] || [];
-    // Базовый URL вашего сайта на GitHub Pages
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.getElementById('categories').style.display = 'none';
@@ -67,19 +59,17 @@ function showCategory(categoryKey) {
     productListDiv.style.display = 'block';
 
     if (categoryProducts.length === 0) {
-        // ... (блок пустых товаров)
         productListDiv.innerHTML = `
             <div class="product-item" style="text-align: center;">
                 <h3>Товаров в этой категории пока нет 😞</h3>
             </div>
         `;
     } else {
-        // Если товары есть
         categoryProducts.forEach(product => {
             const item = document.createElement('div');
             item.className = 'product-item';
 
-            // Проверяем наличие фото и формируем URL
+            // Формируем ПОЛНЫЙ URL. Если product.image не существует, imageUrl будет null
             const imageUrl = product.image ? baseUrl + product.image : null;
 
             item.innerHTML = `
@@ -103,14 +93,12 @@ function showCategory(categoryKey) {
 
 // --- 3. Функционал: Обработка действий пользователя (Кнопка Купить) ---
 
-// Логика кнопки "Назад"
 tg.MainButton.onClick(() => {
     document.getElementById('categories').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
     tg.MainButton.hide();
 });
 
-// Логика кнопки "Купить" (Финальная версия, работает для всех товаров)
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);

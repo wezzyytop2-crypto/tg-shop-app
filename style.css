@@ -38,7 +38,6 @@ body {
     color: var(--tg-theme-hint-color, #666);
 }
 
-
 /* --- СТИЛИ ДЛЯ ГОРИЗОНТАЛЬНЫХ КАТЕГОРИЙ --- */
 #categories {
     display: flex;
@@ -50,12 +49,11 @@ body {
 
 .category-item {
     flex-grow: 1;
-    flex-basis: calc(50% - 10px); /* 2 колонки */
+    flex-basis: calc(50% - 10px);
     text-align: center;
     padding: 15px 10px;
     border: none;
     border-radius: 8px;
-    /* Используем цвет фона Telegram */
     background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     color: var(--tg-theme-text-color, #000000);
     font-size: 14px;
@@ -86,8 +84,8 @@ body {
         width: 100%;
         padding: 10px;
         margin-top: 10px;
-        /* ФИРМЕННЫЙ ОРАНЖЕВЫЙ ЦВЕТ ДЛЯ КНОПКИ КУПИТЬ */
-        background-color: #FF9900;
+        /* Мягкий Золотисто-желтый цвет */
+        background-color: #E6B34A;
         color: var(--tg-theme-button-text-color, #ffffff);
         border: none;
         border-radius: 6px;
