@@ -4,6 +4,20 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
 
+// --- НОВЫЙ БЛОК: УСТАНОВКА ФИРМЕННЫХ ЦВЕТОВ ---
+
+// Фирменный Оранжевый цвет вашего логотипа
+const mainColor = '#FF9900';
+const headerColor = '#FF9900';
+
+tg.setHeaderColor(headerColor);
+tg.MainButton.setParams({
+    color: mainColor
+});
+
+// ---------------------------------------------
+
+
 // --- 1. Данные: Список ваших товаров (С ПОЛЕМ image ТОЛЬКО ДЛЯ 5 ТОВАРОВ) ---
 const products = {
 
@@ -11,29 +25,30 @@ const products = {
         // Худи Essentials - ФОТО НЕТ
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Новое, с бирками." },
         // Черное Zip-Худи Polo - ФОТО ЕСТЬ
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "Черное худи на молнии.", image: "images/zip-hoofie_ralph.png" }, // <--- ВАШЕ ФОТО (image_f53369.jpg)
+        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "Черное худи на молнии.", image: "images/polo_zip_hoodie.jpg" },
         // Серое Zip-Худи Burberry - ФОТО ЕСТЬ
-        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Светло-серое, подкладка в клетку.", image: "images/zip-hoodie_burberry.jpg" } // <--- ВАШЕ ФОТО (image_f533aa.jpg)
+        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Светло-серое, подкладка в клетку.", image: "images/burberry_zip_hoodie.jpg" }
     ],
     t_shirts: [
-        // Футболка Bape - ФОТО НЕТ
+        // Футболка Bape - ФОТО НЕТ (ХОТЯ ФОТО image_f53370.jpg БЫЛО ЗАГРУЖЕНО, Я ЕГО НЕ ВКЛЮЧАЮ ПО ЗАПРОСУ)
         { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "Чёрная футболка Bape." },
         // Футболка Stussy - ФОТО НЕТ
         { id: 402, name: "Футболка 'Stussy' (Базовая)", price: 3200, size: "S", description: "Черный цвет, новый дроп." }
     ],
 
+    // ПУСТЫЕ МАССИВЫ
     jackets: [],
     sneakers: [],
 
     accessories: [
         // Рюкзак Supreme (Серебро) - ФОТО ЕСТЬ
-        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Продан. Металлический цвет.", image: "images/bag_supreme_silver.png" }, // <--- ВАШЕ ФОТО (image_f533e3.jpg)
+        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Продан. Металлический цвет.", image: "images/supreme_backpack_silver.jpg" },
         // Рюкзак Supreme (Черный) - ФОТО ЕСТЬ
-        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Продан. Черный, с белым лого.", image: "images/bag_supreme_black.png" }, // <--- ВАШЕ ФОТО (image_f53406.jpg)
+        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Продан. Черный, с белым лого.", image: "images/supreme_backpack_black.jpg" },
         // Ремень Gucci - ФОТО НЕТ
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Продан. Черный ремень, черная пряжка." },
         // Сумка Lacoste - ФОТО ЕСТЬ
-        { id: 504, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Продана. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" }, // <--- ВАШЕ ФОТО (image_f5338d.jpg)
+        { id: 504, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Продана. Маленькая сумка-мессенджер.", image: "images/lacoste_bag.jpg" },
         // Очки Chrome Hearts - ФОТО НЕТ
         { id: 505, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Черная оправа." }
     ]
@@ -64,7 +79,7 @@ function showCategory(categoryKey) {
             const item = document.createElement('div');
             item.className = 'product-item';
 
-            // Эта строка проверяет, существует ли 'product.image'. Если да - она создает полный URL.
+            // Проверяем наличие фото и формируем URL
             const imageUrl = product.image ? baseUrl + product.image : null;
 
             item.innerHTML = `
@@ -86,7 +101,7 @@ function showCategory(categoryKey) {
 }
 
 
-// --- 3. Функционал: Обработка действий пользователя ---
+// --- 3. Функционал: Обработка действий пользователя (Кнопка Купить) ---
 
 // Логика кнопки "Назад"
 tg.MainButton.onClick(() => {
@@ -95,7 +110,7 @@ tg.MainButton.onClick(() => {
     tg.MainButton.hide();
 });
 
-// Логика кнопки "Купить" (Финальная версия)
+// Логика кнопки "Купить" (Финальная версия, работает для всех товаров)
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);

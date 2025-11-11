@@ -10,17 +10,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Наш Ассортимент</h1>
-    </header>
+
+    <div id="shop-header">
+        <img src="images/logo.jpg" alt="Логотип ulans_store" id="logo">
+        <div id="shop-info">
+            <h2>U L A N S _ S T O R E</h2>
+            <p>Ваш магазин оригинальных вещей из Европы и США. Работаем с 2023 года.</p>
+        </div>
+    </div>
 
     <div id="categories">
-        <h2>Выберите категорию:</h2>
-        <button onclick="showCategory('hoodies_sweats')">Худи и Свитшоты</button>
-        <button onclick="showCategory('t_shirts')">Футболки</button>
-        <button onclick="showCategory('jackets')">Куртки и Верхняя одежда</button>
-        <button onclick="showCategory('sneakers')">Обувь</button>
-        <button onclick="showCategory('accessories')">Аксессуары (Ремни, Очки, Сумки)</button>
+        <div class="category-item" onclick="showCategory('hoodies_sweats')">Худи и Свитшоты</div>
+        <div class="category-item" onclick="showCategory('t_shirts')">Футболки</div>
+        <div class="category-item" onclick="showCategory('jackets')">Куртки</div>
+        <div class="category-item" onclick="showCategory('sneakers')">Обувь</div>
+        <div class="category-item" onclick="showCategory('accessories')">Аксессуары</div>
     </div>
 
     <div id="product-list" style="display:none;">
