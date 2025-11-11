@@ -4,7 +4,7 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// --- 1. Данные: Список ваших товаров (БЕЗ ПОЛЯ image) ---
+// --- 1. Данные: Список ваших товаров ---
 const products = {
 
     hoodies_sweats: [
@@ -54,12 +54,16 @@ function showCategory(categoryKey) {
         categoryProducts.forEach(product => {
             const item = document.createElement('div');
             item.className = 'product-item';
+
+            // *** КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ ЗДЕСЬ ***
+            // Мы используем \` (обратные кавычки) вокруг product.name,
+            // чтобы HTML не ломался из-за одинарных кавычек в названии.
             item.innerHTML = `
                 <h3>${product.name}</h3>
                 <p><strong>Размер:</strong> ${product.size}</p>
                 <p>${product.description}</p>
                 <p>Цена: **${product.price} руб.**</p>
-                <button onclick="buyProduct(${product.id}, '${product.name}', ${product.price})">Купить / Заказать</button>
+                <button onclick="buyProduct(${product.id}, \`${product.name}\`, ${product.price})">Купить / Заказать</button>
             `;
             productListDiv.appendChild(item);
         });
