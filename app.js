@@ -82,9 +82,19 @@ tg.MainButton.onClick(() => {
     tg.MainButton.hide();
 });
 
-// Логика кнопки "Купить"
+// Логика кнопки "Купить" (ОБНОВЛЕНО: Добавлена связь с продавцом)
 function buyProduct(id, name, price) {
-    // Нам нужен способ найти размер продукта по ID в массиве. 
-    // Поскольку у нас сложная структура, просто выводим цену и имя.
-    tg.showAlert(`Вы выбрали: ${name} за ${price} руб. Для оформления заказа, свяжитесь с продавцом. (ID: ${id})`);
+    const sellerUsername = 'ulans_sttore'; // Имя пользователя продавца
+
+    // Формируем сообщение для продавца (которое он увидит при открытии чата)
+    const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
+
+    // Создаем ссылку для открытия чата с предзаполненным текстом
+    const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
+
+    // Заставляем Telegram Mini App открыть эту ссылку
+    tg.openTelegramLink(telegramUrl);
+
+    // Опционально: показываем уведомление
+    tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
 }
