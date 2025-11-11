@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ассортимент Одежды ulans_store</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Наш Ассортимент</h1>
+    </header>
+
+    <div id="categories">
+        <h2>Выберите категорию:</h2>
+        <button onclick="showCategory('hoodies_sweats')">Худи и Свитшоты</button>
+        <button onclick="showCategory('t_shirts')">Футболки</button>
+        <button onclick="showCategory('jackets')">Куртки и Верхняя одежда</button>
+        <button onclick="showCategory('sneakers')">Обувь</button>
+        <button onclick="showCategory('accessories')">Аксессуары (Ремни, Очки, Сумки)</button>
+    </div>
+
+    <div id="product-list" style="display:none;">
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
