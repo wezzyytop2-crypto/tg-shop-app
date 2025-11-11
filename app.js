@@ -33,7 +33,7 @@ const products = {
 };
 
 
-// --- 2. Функционал: Отображение товаров (с проверкой на пустоту) ---
+// --- 2. Функционал: Отображение товаров ---
 
 function showCategory(categoryKey) {
     const categoryProducts = products[categoryKey] || [];
@@ -82,7 +82,7 @@ tg.MainButton.onClick(() => {
     tg.MainButton.hide();
 });
 
-// Логика кнопки "Купить" (ОБНОВЛЕНО: Добавлена проверка WebAppMethodUnsupported)
+// Логика кнопки "Купить" (ФИНАЛЬНАЯ ВЕРСИЯ: С уведомлением и ссылкой для всех товаров)
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
 
@@ -92,14 +92,15 @@ function buyProduct(id, name, price) {
     // Создаем ссылку для открытия чата
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    // *** КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: ПРОВЕРКА НА ПОДДЕРЖКУ ФУНКЦИИ ***
+    // ПРОВЕРКА: Если мы в Telegram Mini App
     if (tg && tg.openTelegramLink) {
-        // Если запущено в Telegram Mini App, используем специальный метод
+        // 1. Открываем чат
         tg.openTelegramLink(telegramUrl);
+        // 2. Выводим уведомление
         tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
     } else {
-        // Если запущено в обычном браузере, используем обычный переход
+        // Если запущено вне Telegram (на случай, если открыто в Chrome)
         window.open(telegramUrl, '_blank');
-        tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Если чат не открылся, проверьте его вручную.`);
+        tg.showAlert(`Вы выбрали: ${name} за ${price} руб. Откройте чат с продавцом @${sellerUsername} для оформления заказа.`);
     }
 }
