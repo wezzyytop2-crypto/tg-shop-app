@@ -1,6 +1,10 @@
-﻿// app.js (Обновлено: Категории 'jackets' и 'sneakers' теперь пусты)
+﻿// app.js
 
-// --- 1. Данные: Список ваших товаров ---
+// Инициализация Telegram Web App SDK
+const tg = window.Telegram.WebApp;
+tg.ready();
+
+// --- 1. Данные: Список ваших товаров (Полный ассортимент) ---
 const products = {
 
     hoodies_sweats: [
@@ -27,3 +31,58 @@ const products = {
         { id: 505, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Черная оправа, остались одни белые." }
     ]
 };
+
+
+// --- 2. Функционал: Отображение товаров (с проверкой на пустоту) ---
+
+function showCategory(categoryKey) {
+    const categoryProducts = products[categoryKey] || [];
+
+    document.getElementById('categories').style.display = 'none';
+    const productListDiv = document.getElementById('product-list');
+    productListDiv.innerHTML = '';
+    productListDiv.style.display = 'block';
+
+    if (categoryProducts.length === 0) {
+        // Если товаров нет
+        productListDiv.innerHTML = `
+            <div class="product-item" style="text-align: center;">
+                <h3>Товаров в этой категории пока нет 😞</h3>
+                <p>Мы работаем над пополнением ассортимента. Загляните позже!</p>
+            </div>
+        `;
+    } else {
+        // Если товары есть
+        categoryProducts.forEach(product => {
+            const item = document.createElement('div');
+            item.className = 'product-item';
+            item.innerHTML = `
+                <h3>${product.name}</h3>
+                <p><strong>Размер:</strong> ${product.size}</p>
+                <p>${product.description}</p>
+                <p>Цена: **${product.price} руб.**</p>
+                <button onclick="buyProduct(${product.id}, '${product.name}', ${product.price})">Купить / Заказать</button>
+            `;
+            productListDiv.appendChild(item);
+        });
+    }
+
+    // Настраиваем Главную Кнопку Telegram внизу экрана (кнопка "Назад")
+    tg.MainButton.setText("← Вернуться к категориям");
+    tg.MainButton.show();
+}
+
+
+// --- 3. Функционал: Обработка действий пользователя ---
+
+// Логика кнопки "Назад"
+tg.MainButton.onClick(() => {
+    document.getElementById('categories').style.display = 'block';
+    document.getElementById('product-list').style.display = 'none';
+    tg.MainButton.hide();
+});
+
+// Логика кнопки "Купить"
+function buyProduct(id, name, price) {
+    tg.showAlert(`Вы выбрали: ${name} за ${price} руб. Для оформления заказа, свяжитесь с продавцом. (ID: ${id})`);
+}
