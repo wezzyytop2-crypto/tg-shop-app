@@ -1,34 +1,71 @@
-
+/* Общие стили и сброс */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-  
+    /* Использование переменных Telegram для адаптации к темной/светлой теме */
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
 }
 
+/* Стилизация шапки (Header) */
 header {
+    /* Фон шапки (золотистый/оранжевый) */
     background-color: var(--tg-theme-header-bg-color, #E6B34A);
     color: var(--tg-theme-button-text-color, #ffffff);
     padding: 15px;
-    text-align: center;
-    font-size: 1.5em;
     border-bottom: 2px solid #E6B34A;
 }
+
+/* Контейнер для логотипа и текста в шапке (Flexbox для выравнивания) */
+#shop-header {
+    display: flex;
+    align-items: center; /* Выравнивание элементов по центру вертикали */
+    gap: 15px; /* Расстояние между лого и текстом */
+}
+
+/* Стилизация ЛОГОТИПА */
+#logo {
+    width: 60px; /* Фиксированный, небольшой размер */
+    height: 60px;
+    border-radius: 50%; /* Круглая форма */
+    object-fit: cover; /* Обеспечивает, что изображение впишется в круг */
+    flex-shrink: 0; /* Не позволяет логотипу сжиматься */
+}
+
+/* Стилизация текстового блока */
+#shop-info {
+    flex-grow: 1; /* Позволяет тексту занимать все оставшееся место */
+}
+
+    /* Стилизация текста в шапке */
+    #shop-info h2 {
+        /* Заголовок в шапке должен быть белым, как и весь текст шапки */
+        color: var(--tg-theme-button-text-color, #ffffff);
+        margin: 0 0 5px 0;
+        text-align: left;
+        font-size: 1.2em;
+    }
+
+    #shop-info p {
+        /* Текст описания должен быть белым */
+        color: var(--tg-theme-button-text-color, #ffffff);
+        margin: 0;
+        font-size: 0.9em;
+    }
 
 main {
     padding: 20px;
 }
 
-
+/* Стили для главного заголовка категорий */
 h2 {
     color: var(--tg-theme-hint-color, #888888);
     text-align: center;
     margin-bottom: 25px;
 }
 
-
+/* Стили для категорий (Кнопки) */
 .category-button {
     display: block;
     width: 100%;
@@ -48,7 +85,7 @@ h2 {
         background-color: var(--tg-theme-hint-color, #d0d0d0);
     }
 
-
+/* Стили для списка товаров */
 #product-list {
     display: none;
 }
@@ -70,16 +107,16 @@ h2 {
         margin: 5px 0;
     }
 
+/* --- Стили ДЛЯ ДВУХ КНОПОК --- */
 
 .button-group {
     display: flex;
-    gap: 10px; 
+    gap: 10px;
     margin-top: 15px;
 }
 
-    
     .button-group button {
-        flex: 1; 
+        flex: 1;
         padding: 12px 10px;
         border: none;
         border-radius: 6px;
@@ -89,12 +126,11 @@ h2 {
     }
 
 .buy-button {
-    background-color: #E6B34A; 
+    background-color: #E6B34A;
     color: var(--tg-theme-button-text-color, #ffffff);
 }
 
-
 .photo-button {
-    background-color: var(--tg-theme-hint-color, #cccccc); 
+    background-color: var(--tg-theme-hint-color, #cccccc);
     color: var(--tg-theme-text-color, #000000);
 }
