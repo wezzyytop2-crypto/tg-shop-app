@@ -1,143 +1,129 @@
-﻿// app.js
-
-// Инициализация Telegram Web App SDK
-const tg = window.Telegram.WebApp;
-tg.ready();
-
-// --- 1. Настройка UI (Цвета) ---
-const mainColor = '#E6B34A';
-const headerColor = '#E6B34A';
-
-tg.setHeaderColor(headerColor);
-tg.MainButton.setParams({ 
-    color: mainColor 
-});
-// ---------------------------------------------
-
-// --- 2. Данные: Список ваших товаров (Исправлены дубликаты ID) ---
-const products = {
-    hoodies_sweats: [
-        { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "SELL. Бежевое худи.", image: "images/essentails.png" },
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "IN STOCK. Черное зип-худи.", image: "images/zip-hoofie_ralph.png" },
-        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "SELL. Серое зип-худи.", image: "images/zip-hoodie_burberry.jpg" }
-    ], t_shirts: [
-        { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "SELL. Чёрная футболка Bape.", image: "images/bape.png" },
-    ], jackets: [], sneakers: [], accessories: [
-        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "SELL. Металлический цвет.", image: "images/bag_supreme_silver.png" },
-        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "SELL. Черный, с белым лого.", image: "images/bag_supreme_black.png" },
-        { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Черный ремень, черная пряжка.", image: "images/black_gold.png" },
-        { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Бежевый ремень, золотая пряжка.", image: "images/glasses_black.png" },
-        { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "SELL. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
-        { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Черная оправа.", image: "images/glasses_black.png" },
-        { id: 507, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Прозрачная оправа.", image: "images/glasses_white.png" }
-    ]
+﻿/* Общие стили и сброс */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
 }
 
-;
-
-
-// --- 3. Функционал: Отображение товаров (С ДВУМЯ КНОПКАМИ) ---
-
-function showCategory(categoryKey) {
-    const categoryProducts = products[categoryKey] || [];
-    const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
-    document .getElementById('categories').style.display = 'none';
-    const productListDiv = document.getElementById('product-list');
-    productListDiv .innerHTML = '';
-    productListDiv .style.display = 'block';
-    if (categoryProducts.length === 0)
-
-{
-    productListDiv .innerHTML = ` <div class="product-item" style="text-align: center;"> <h3>Товаров в этой категории пока нет 😞</h3> </div> `;
+/* --- Стилизация Шапки (Header) --- */
+header {
+    background-color: var(--tg-theme-header-bg-color, #E6B34A);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    padding: 15px;
+    border-bottom: 2px solid #E6B34A;
 }
 
-else {
-    categoryProducts .forEach(product => {
-            const item = document.createElement('div');
-            item.className = 'product-item';
-            
-            const imageUrl = product.image ? baseUrl + product.image : null;
-            
-            item.innerHTML = `
-                ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
-                
-                <h3>${product.name}</h3>
-                <p><strong>Размер:</strong> ${product.size}</p> 
-                <p>${product.description}</p>
-                <p>Цена: **${product.price} руб.**</p>
-                
-                <div class="button-group">
-                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${product.price})">Купить / Заказать</button>
-                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить детальные фото</button>
-                </div>
-            `;
-            productListDiv.appendChild(item);
-        });
+#shop-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-tg.MainButton.setText("← Вернуться к категориям");
-tg.MainButton.show();
+/* --- СТИЛИ ДЛЯ ЛОГОТИПА (Маленький кружок) --- */
+#logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
-
-// --- 4. Функционал: Обработка действия "Купить" ---
-
-function buyProduct(id, name, price) {
-    const sellerUsername = 'ulans_sttore';
-    // Имя продавца const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
-    const telegramUrl = `https://t.me/$
-
-{
-    sellerUsername
+#shop-info {
+    flex-grow: 1;
 }
 
-?text=$ {
-    messageText
+    /* --- СТИЛИ ДЛЯ ТЕКСТА В ШАПКЕ (Белый цвет) --- */
+    #shop-info h2 {
+        color: var(--tg-theme-button-text-color, #ffffff);
+        margin: 0 0 5px 0;
+        text-align: left;
+        font-size: 1.2em;
+    }
+
+    #shop-info p {
+        color: var(--tg-theme-button-text-color, #ffffff);
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+/* --- Стили для основного контента --- */
+main {
+    padding: 20px;
 }
 
-`;
-
-if (tg && tg.openTelegramLink) {
-    tg .openTelegramLink(telegramUrl);
+h2 {
+    color: var(--tg-theme-hint-color, #888888);
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-else {
-    window .open(telegramUrl, '_blank');
+/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ (Рамки) --- */
+.category-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000000);
+    transition: background-color 0.2s;
 }
 
+    .category-button:active {
+        background-color: var(--tg-theme-hint-color, #d0d0d0);
+    }
+
+/* Стили для списка товаров */
+#product-list {
+    display: none;
 }
 
-// --- 5. НОВЫЙ ФУНКЦИОНАЛ: Обработка действия "Запросить детальные фото" ---
-
-function requestPhotos(id, name) {
-    const sellerUsername = 'ulans_sttore';
-    // Имя продавца const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
-    const telegramUrl = `https://t.me/$
-
-{
-    sellerUsername
+.product-item {
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-?text=$ {
-    messageText
+    .product-item h3 {
+        color: var(--tg-theme-text-color, #333333);
+        margin-top: 0;
+    }
+
+    .product-item p {
+        margin: 5px 0;
+    }
+
+/* --- Стили для двух кнопок товара --- */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-`;
+    .button-group button {
+        flex: 1;
+        padding: 12px 10px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
 
-if (tg && tg.openTelegramLink) {
-    tg .openTelegramLink(telegramUrl);
+.buy-button {
+    background-color: #E6B34A;
+    color: var(--tg-theme-button-text-color, #ffffff);
 }
 
-else {
-    window .open(telegramUrl, '_blank');
+.photo-button {
+    background-color: var(--tg-theme-hint-color, #cccccc);
+    color: var(--tg-theme-text-color, #000000);
 }
-
-}
-
-// --- 6. Функционал: Кнопка "Назад" ---
-
-tg.MainButton.onClick(() => {
-    document.getElementById('categories').style.display = 'block';
-    document.getElementById('product-list').style.display = 'none';
-    tg.MainButton.hide();
-});
