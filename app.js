@@ -1,58 +1,52 @@
-﻿
+﻿// app.js
 
+// Инициализация Telegram Web App SDK
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-
-const mainColor = '#E6B34A'; 
+// --- 1. Настройка UI (Цвета) ---
+const mainColor = '#E6B34A';
 const headerColor = '#E6B34A';
 
 tg.setHeaderColor(headerColor);
 tg.MainButton.setParams({
     color: mainColor
 });
+// ---------------------------------------------
 
+// --- 2. Данные: Список ваших товаров (Исправлены дубликаты ID) ---
 const products = {
 
     hoodies_sweats: [
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "SELL. Бежевое худи.", image: "images/essentails.png" },
-        
         { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "IN STOCK. Черное зип-худи.", image: "images/zip-hoofie_ralph.png" },
-       
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "SELL. Серое зип-худи.", image: "images/zip-hoodie_burberry.jpg" }
     ],
     t_shirts: [
         { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "SELL. Чёрная футболка Bape.", image: "images/bape.png" },
     ],
 
-    // ПУСТЫЕ МАССИВЫ для заполнения пустых категорий
     jackets: [],
     sneakers: [],
 
     accessories: [
-        // Рюкзак 'Supreme' (Серебрянный) 
         { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "SELL. Металлический цвет.", image: "images/bag_supreme_silver.png" },
-        // Рюкзак 'Supreme' (Черный) 
         { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "SELL. Черный, с белым лого.", image: "images/bag_supreme_black.png" },
-        // Ремень 'Gucci'
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Черный ремень, черная пряжка.", image: "images/black_gold.png" },
-        // Ремень 'Gucci 2'
         { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Бежевый ремень, золотая пряжка.", image: "images/glasses_black.png" },
-        // Сумка 'Lacoste'
         { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "SELL. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
-        // Очки 'Chrome Hearts1'
+
+        // !!! ИСПРАВЛЕНО: ID были 506. Теперь они 506 и 507
         { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Черная оправа.", image: "images/glasses_black.png" },
-        // Очки 'Chrome Hearts2'
-        { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Прозрачная оправа.", image: "images/glasses_white.png" }
+        { id: 507, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Прозрачная оправа.", image: "images/glasses_white.png" }
     ]
 };
 
 
-
+// --- 3. Функционал: Отображение товаров (С ДВУМЯ КНОПКАМИ) ---
 
 function showCategory(categoryKey) {
     const categoryProducts = products[categoryKey] || [];
-    
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.getElementById('categories').style.display = 'none';
@@ -71,9 +65,7 @@ function showCategory(categoryKey) {
             const item = document.createElement('div');
             item.className = 'product-item';
 
-   
-            const imageFileName = product.image ? product.image.toLowerCase() : null;
-            const imageUrl = product.image ? baseUrl + imageFileName : null;
+            const imageUrl = product.image ? baseUrl + product.image : null;
 
             item.innerHTML = `
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
@@ -97,10 +89,10 @@ function showCategory(categoryKey) {
 }
 
 
-
+// --- 4. Функционал: Обработка действия "Купить" ---
 
 function buyProduct(id, name, price) {
-    const sellerUsername = 'ulans_sttore'; 
+    const sellerUsername = 'ulans_sttore'; // Имя продавца
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
@@ -113,9 +105,10 @@ function buyProduct(id, name, price) {
     }
 }
 
+// --- 5. НОВЫЙ ФУНКЦИОНАЛ: Обработка действия "Запросить детальные фото" ---
 
 function requestPhotos(id, name) {
-    const sellerUsername = 'ulans_sttore'; 
+    const sellerUsername = 'ulans_sttore'; // Имя продавца
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
@@ -128,7 +121,7 @@ function requestPhotos(id, name) {
     }
 }
 
-
+// --- 6. Функционал: Кнопка "Назад" ---
 
 tg.MainButton.onClick(() => {
     document.getElementById('categories').style.display = 'block';
