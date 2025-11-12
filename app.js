@@ -35,8 +35,6 @@ const products = {
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Черный ремень, черная пряжка.", image: "images/black_gold.png" },
         { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Бежевый ремень, золотая пряжка.", image: "images/glasses_black.png" },
         { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "SELL. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
-
-        // !!! ИСПРАВЛЕНО: ID были 506. Теперь они 506 и 507
         { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Черная оправа.", image: "images/glasses_black.png" },
         { id: 507, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Прозрачная оправа.", image: "images/glasses_white.png" }
     ]
@@ -98,10 +96,8 @@ function buyProduct(id, name, price) {
 
     if (tg && tg.openTelegramLink) {
         tg.openTelegramLink(telegramUrl);
-        tg.showAlert(`Запрос на покупку ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
     } else {
         window.open(telegramUrl, '_blank');
-        tg.showAlert(`Вы выбрали: ${name} за ${price} руб. Откройте чат с продавцом @${sellerUsername} для оформления заказа.`);
     }
 }
 
@@ -114,10 +110,8 @@ function requestPhotos(id, name) {
 
     if (tg && tg.openTelegramLink) {
         tg.openTelegramLink(telegramUrl);
-        tg.showAlert(`Запрос детальных фото ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
     } else {
         window.open(telegramUrl, '_blank');
-        tg.showAlert(`Вы запросили фото: ${name}. Откройте чат с продавцом @${sellerUsername}.`);
     }
 }
 
