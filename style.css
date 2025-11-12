@@ -9,31 +9,27 @@ body {
 
 /* --- Стилизация Шапки (Header) --- */
 header {
-    /* Фон шапки (золотистый/оранжевый) */
     background-color: var(--tg-theme-header-bg-color, #E6B34A);
-    /* Цвет текста по умолчанию в шапке */
     color: var(--tg-theme-button-text-color, #ffffff);
     padding: 15px;
     border-bottom: 2px solid #E6B34A;
 }
 
-/* Контейнер для логотипа и текста в шапке */
 #shop-header {
     display: flex;
-    align-items: center; /* Выравнивание по центру вертикали */
-    gap: 15px; /* Расстояние между лого и текстом */
+    align-items: center;
+    gap: 15px;
 }
 
 /* --- СТИЛИ ДЛЯ ЛОГОТИПА (Маленький кружок) --- */
 #logo {
-    width: 60px; /* Фиксированный, небольшой размер */
+    width: 60px;
     height: 60px;
-    border-radius: 50%; /* Круглая форма */
-    object-fit: cover; /* Обеспечивает, что изображение впишется в круг */
+    border-radius: 50%;
+    object-fit: cover;
     flex-shrink: 0;
 }
 
-/* Стилизация текстового блока */
 #shop-info {
     flex-grow: 1;
 }
@@ -63,6 +59,7 @@ h2 {
     margin-bottom: 25px;
 }
 
+/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ (Рамки) --- */
 .category-button {
     display: block;
     width: 100%;
