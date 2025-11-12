@@ -5,7 +5,7 @@ const tg = window.Telegram.WebApp;
 tg.ready();
 
 // --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
-// Курс для конвертации: 1 MDL = 0.94 ПМР
+// Курс: 1 MDL = 0.94 ПМР
 // Для расчета MDL из ПМР, используем обратный коэффициент: 1 / 0.94
 const PMR_TO_MDL_RATE = 1 / 0.94;
 // ---------------------------------
@@ -20,10 +20,13 @@ tg.MainButton.setParams({
 });
 // ---------------------------------------------
 
-// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ В ПМР ДО БЛИЖАЙШЕГО КРАТНОГО 5 ---
-function roundToNearestFive(price) {
-    // Округляем цену в ПМР до ближайшего числа, оканчивающегося на 0 или 5
-    return Math.round(price / 5) * 5;
+// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА (Оканчивается на 0) ---
+function roundToNearestTen(price) {
+    // Math.round(price / 10) * 10:
+    // - 464 / 10 = 46.4. Math.round(46.4) = 46. 46 * 10 = 460 (вниз).
+    // - 467 / 10 = 46.7. Math.round(46.7) = 47. 47 * 10 = 470 (вверх).
+    // - 465 / 10 = 46.5. Math.round(46.5) = 47. 47 * 10 = 470 (половина округляется вверх).
+    return Math.round(price / 10) * 10;
 }
 
 
@@ -79,11 +82,14 @@ function showCategory(categoryKey) {
 
             const imageUrl = product.image ? baseUrl + product.image : null;
 
-            // 1. Округление цены в ПМР до ближайшего 5
-            const roundedPmrPrice = roundToNearestFive(product.price);
+            // 1. Округление цены в ПМР до ближайшего 10
+            const roundedPmrPrice = roundToNearestTen(product.price);
 
-            // 2. Расчет цены в MDL (от округленной цены в ПМР) и округление до целых
-            const mdlPrice = Math.round(roundedPmrPrice * PMR_TO_MDL_RATE);
+            // 2. Расчет цены в MDL (от округленной цены в ПМР)
+            const rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
+
+            // 3. Округление расчетной цены MDL до ближайшего 10
+            const roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
             item.innerHTML = `
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
@@ -92,7 +98,7 @@ function showCategory(categoryKey) {
                 <p><strong>Размер:</strong> ${product.size}</p>
                 <p>${product.description}</p>
 
-                <p>Цена: **${roundedPmrPrice} ПМР** / ~${mdlPrice} MDL</p>
+                <p>Цена: **${roundedPmrPrice} ПМР** / ~${roundedMdlPrice} MDL</p>
 
                 <div class="button-group">
                     <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">Купить / Заказать</button>
