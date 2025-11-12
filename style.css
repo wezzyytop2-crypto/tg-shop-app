@@ -11,20 +11,20 @@ body {
 header {
     background-color: var(--tg-theme-header-bg-color, #E6B34A);
     color: var(--tg-theme-button-text-color, #ffffff);
-    padding: 15px;
+    padding: 10px 15px; /* Уменьшен вертикальный отступ */
     border-bottom: 2px solid #E6B34A;
 }
 
 #shop-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px; /* Уменьшен интервал */
 }
 
 /* --- СТИЛИ ДЛЯ ЛОГОТИПА (Маленький кружок) --- */
 #logo {
-    width: 60px;
-    height: 60px;
+    width: 40px; /* Уменьшен размер */
+    height: 40px; /* Уменьшен размер */
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -37,47 +37,43 @@ header {
     /* --- СТИЛИ ДЛЯ ТЕКСТА В ШАПКЕ (Белый цвет) --- */
     #shop-info h2 {
         color: var(--tg-theme-button-text-color, #ffffff);
-        margin: 0 0 5px 0;
-        text-align: left;
-        font-size: 1.2em;
-    }
-
-    #shop-info p {
-        color: var(--tg-theme-button-text-color, #ffffff);
         margin: 0;
-        font-size: 0.9em;
+        text-align: left;
+        font-size: 1.1em; /* Уменьшен размер шрифта */
     }
 
 /* --- Стили для основного контента --- */
 main {
     padding: 20px;
+    padding-bottom: 80px; /* Дополнительный отступ для футера */
 }
 
 h2 {
-    color: var(--tg-theme-hint-color, #888888);
+    color: var(--tg-theme-text-color, #333333); /* Изменен на основной цвет текста */
     text-align: center;
     margin-bottom: 25px;
+    font-size: 1.3em;
 }
 
-/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ (Рамки и Сетка) --- */
+/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ --- */
 #categories {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Создает 2 равные колонки */
-    gap: 10px; /* Расстояние между кнопками */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
     margin-bottom: 25px;
 }
 
 .category-button {
     display: block;
-    width: 100%; /* Убрано, так как grid сам управляет шириной */
+    width: 100%;
     padding: 15px;
-    margin: 0; /* Убраны вертикальные отступы, теперь ими управляет gap */
+    margin: 0;
     font-size: 1.1em;
     text-align: center;
-    border: none;
+    border: 1px solid var(--tg-theme-hint-color, #cccccc); /* Тонкая рамка */
     border-radius: 8px;
     cursor: pointer;
-    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    background-color: transparent; /* Прозрачный фон */
     color: var(--tg-theme-text-color, #000000);
     transition: background-color 0.2s;
 }
@@ -86,17 +82,14 @@ h2 {
         background-color: var(--tg-theme-hint-color, #d0d0d0);
     }
 
-/* Стили для списка товаров */
-#product-list {
-    display: none;
-}
-
+/* Стили для списка товаров (Галерея с рамкой) */
 .product-item {
-    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    background-color: transparent; /* Прозрачный фон */
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--tg-theme-hint-color, #dddddd); /* Тонкая рамка */
+    box-shadow: none;
 }
 
     .product-item h3 {
@@ -108,7 +101,13 @@ h2 {
         margin: 5px 0;
     }
 
-/* --- Стили для двух кнопок товара --- */
+        /* --- Акцент на цене --- */
+        .product-item p strong {
+            font-size: 1.2em; /* Увеличенный размер для основной цены */
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+/* --- Стили для двух кнопок товара (Контраст) --- */
 .button-group {
     display: flex;
     gap: 10px;
@@ -124,15 +123,42 @@ h2 {
         font-weight: bold;
     }
 
+/* Купить - Акцентный цвет, заливка */
 .buy-button {
-    background-color: #E6B34A;
+    background-color: #E6B34A; /* Акцентный цвет */
     color: var(--tg-theme-button-text-color, #ffffff);
     border: none;
 }
 
+/* Запросить фото - Прозрачный, рамка (деакцентирован) */
 .photo-button {
-    /* Обновленный стиль: прозрачный фон с рамкой */
     background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
     border: 2px solid var(--tg-theme-hint-color, #cccccc);
 }
+
+/* --- Стили для Футера (Преимущества) --- */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-hint-color, #888888);
+    padding: 10px 20px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+#advantages {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+    #advantages .icon {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 1.2em;
+    }

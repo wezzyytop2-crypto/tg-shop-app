@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ассортимент Одежды ulans_store</title>
+    <title>U L A N S _ S T O R E</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <link rel="stylesheet" href="style.css?v=1.7">
+    <link rel="stylesheet" href="style.css?v=2.1">
 </head>
 <body>
 
@@ -16,7 +16,6 @@
             <img src="images/logo.jpg" alt="Логотип ulans_store" id="logo">
             <div id="shop-info">
                 <h2>U L A N S _ S T O R E</h2>
-                <p>Предлагаем люкс копии по доступным ценам. Находимся в Тирасполе, возможна доставка в Бендеры и Кишинев.</p>
             </div>
         </div>
     </header>
@@ -24,17 +23,26 @@
     <main>
         <h2>Выберите категорию:</h2>
         <div id="categories">
-            <button class="category-button" onclick="showCategory('hoodies_sweats')">Худи и Свитшоты</button>
-            <button class="category-button" onclick="showCategory('t_shirts')">Футболки</button>
-            <button class="category-button" onclick="showCategory('jackets')">Куртки</button>
-            <button class="category-button" onclick="showCategory('sneakers')">Обувь</button>
-            <button class="category-button" onclick="showCategory('accessories')">Аксессуары</button>
+            <button class="category-button" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">Худи и Свитшоты</button>
+            <button class="category-button" onclick="showCategory('t_shirts', 'Футболки')">Футболки</button>
+            <button class="category-button" onclick="showCategory('jackets', 'Куртки')">Куртки</button>
+            <button class="category-button" onclick="showCategory('sneakers', 'Обувь')">Обувь</button>
+            <button class="category-button" onclick="showCategory('accessories', 'Аксессуары')">Аксессуары</button>
         </div>
 
         <div id="product-list" style="display:none;">
         </div>
     </main>
 
-    <script src="app.js?v=1.3"></script>
+    <footer>
+        <div id="advantages">
+            <div><span class="icon">🚚</span> Доставка по ПМР/МДЛ</div>
+            <div><span class="icon">🛡️</span> Гарантия качества</div>
+            <div><span class="icon">💬</span> Поддержка 24/7</div>
+        </div>
+    </footer>
+
+
+    <script src="app.js?v=2.1"></script>
 </body>
 </html>

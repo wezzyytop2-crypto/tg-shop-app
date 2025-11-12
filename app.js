@@ -22,10 +22,7 @@ tg.MainButton.setParams({
 
 // --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА (Оканчивается на 0) ---
 function roundToNearestTen(price) {
-    // Math.round(price / 10) * 10:
-    // - 464 / 10 = 46.4. Math.round(46.4) = 46. 46 * 10 = 460 (вниз).
-    // - 467 / 10 = 46.7. Math.round(46.7) = 47. 47 * 10 = 470 (вверх).
-    // - 465 / 10 = 46.5. Math.round(46.5) = 47. 47 * 10 = 470 (половина округляется вверх).
+    // Округляет до ближайшего десятка (например, 467 -> 470; 464 -> 460)
     return Math.round(price / 10) * 10;
 }
 
@@ -58,20 +55,26 @@ const products = {
 };
 
 
-// --- 3. Функционал: Отображение товаров (С ДВУМЯ КНОПКАМИ) ---
+// --- 3. Функционал: Отображение товаров (С ДВУМЯ КНОПКАМИ и ДИНАМИЧЕСКИМ ЗАГОЛОВКОМ) ---
 
-function showCategory(categoryKey) {
+function showCategory(categoryKey, categoryName) {
     const categoryProducts = products[categoryKey] || [];
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
+
+    // Устанавливаем динамический заголовок
+    document.title = `U L A N S _ S T O R E — ${categoryName}`;
 
     document.getElementById('categories').style.display = 'none';
     const productListDiv = document.getElementById('product-list');
     productListDiv.innerHTML = '';
     productListDiv.style.display = 'block';
 
+    // Скрываем Футер с преимуществами, когда показываем товары
+    document.querySelector('footer').style.display = 'none';
+
     if (categoryProducts.length === 0) {
         productListDiv.innerHTML = `
-            <div class="product-item" style="text-align: center;">
+            <div class="product-item" style="text-align: center; border: none;">
                 <h3>Товаров в этой категории пока нет 😞</h3>
             </div>
         `;
@@ -98,7 +101,7 @@ function showCategory(categoryKey) {
                 <p><strong>Размер:</strong> ${product.size}</p>
                 <p>${product.description}</p>
 
-                <p>Цена: **${roundedPmrPrice} ПМР** / ~${roundedMdlPrice} MDL</p>
+                <p>Цена: <strong>${roundedPmrPrice} ПМР</strong> / ~${roundedMdlPrice} MDL</p>
 
                 <div class="button-group">
                     <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">Купить / Заказать</button>
@@ -148,5 +151,12 @@ function requestPhotos(id, name) {
 tg.MainButton.onClick(() => {
     document.getElementById('categories').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
+
+    // Восстанавливаем динамический заголовок
+    document.title = 'U L A N S _ S T O R E';
+
+    // Показываем Футер с преимуществами
+    document.querySelector('footer').style.display = 'flex';
+
     tg.MainButton.hide();
 });
