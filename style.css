@@ -11,20 +11,19 @@ body {
 header {
     background-color: var(--tg-theme-header-bg-color, #E6B34A);
     color: var(--tg-theme-button-text-color, #ffffff);
-    padding: 10px 15px; /* Уменьшен вертикальный отступ */
+    padding: 10px 15px;
     border-bottom: 2px solid #E6B34A;
 }
 
 #shop-header {
     display: flex;
     align-items: center;
-    gap: 10px; /* Уменьшен интервал */
+    gap: 10px;
 }
 
-/* --- СТИЛИ ДЛЯ ЛОГОТИПА (Маленький кружок) --- */
 #logo {
-    width: 40px; /* Уменьшен размер */
-    height: 40px; /* Уменьшен размер */
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -34,22 +33,21 @@ header {
     flex-grow: 1;
 }
 
-    /* --- СТИЛИ ДЛЯ ТЕКСТА В ШАПКЕ (Белый цвет) --- */
     #shop-info h2 {
         color: var(--tg-theme-button-text-color, #ffffff);
         margin: 0;
         text-align: left;
-        font-size: 1.1em; /* Уменьшен размер шрифта */
+        font-size: 1.1em;
     }
 
 /* --- Стили для основного контента --- */
 main {
     padding: 20px;
-    padding-bottom: 80px; /* Дополнительный отступ для футера */
+    padding-bottom: 80px;
 }
 
 h2 {
-    color: var(--tg-theme-text-color, #333333); /* Изменен на основной цвет текста */
+    color: var(--tg-theme-text-color, #333333);
     text-align: center;
     margin-bottom: 25px;
     font-size: 1.3em;
@@ -70,10 +68,10 @@ h2 {
     margin: 0;
     font-size: 1.1em;
     text-align: center;
-    border: 1px solid var(--tg-theme-hint-color, #cccccc); /* Тонкая рамка */
+    border: 1px solid var(--tg-theme-hint-color, #cccccc);
     border-radius: 8px;
     cursor: pointer;
-    background-color: transparent; /* Прозрачный фон */
+    background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
     transition: background-color 0.2s;
 }
@@ -84,11 +82,11 @@ h2 {
 
 /* Стили для списка товаров (Галерея с рамкой) */
 .product-item {
-    background-color: transparent; /* Прозрачный фон */
+    background-color: transparent;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 10px;
-    border: 1px solid var(--tg-theme-hint-color, #dddddd); /* Тонкая рамка */
+    border: 1px solid var(--tg-theme-hint-color, #dddddd);
     box-shadow: none;
 }
 
@@ -103,7 +101,7 @@ h2 {
 
         /* --- Акцент на цене --- */
         .product-item p strong {
-            font-size: 1.2em; /* Увеличенный размер для основной цены */
+            font-size: 1.2em;
             color: var(--tg-theme-text-color, #000000);
         }
 
@@ -123,21 +121,21 @@ h2 {
         font-weight: bold;
     }
 
-/* Купить - Акцентный цвет, заливка */
+/* Кнопка Купить/Заказать - ИСПРАВЛЕННЫЙ КОНТРАСТ */
 .buy-button {
-    background-color: #E6B34A; /* Акцентный цвет */
+    background-color: #D69F3C; /* Более темный, контрастный цвет */
     color: var(--tg-theme-button-text-color, #ffffff);
     border: none;
 }
 
-/* Запросить фото - Прозрачный, рамка (деакцентирован) */
+/* Запросить фото - Прозрачный, рамка */
 .photo-button {
     background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
     border: 2px solid var(--tg-theme-hint-color, #cccccc);
 }
 
-/* --- Стили для Футера (Преимущества) --- */
+/* --- Стили для Футера (Адаптивность ИСПРАВЛЕНА) --- */
 footer {
     position: fixed;
     bottom: 0;
@@ -145,17 +143,23 @@ footer {
     width: 100%;
     background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     color: var(--tg-theme-hint-color, #888888);
-    padding: 10px 20px;
+    padding: 10px 10px; /* Уменьшен padding */
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     z-index: 100;
 }
 
 #advantages {
     display: flex;
-    justify-content: space-around;
-    font-size: 0.8em;
+    justify-content: space-between; /* Равномерное распределение */
+    font-size: 0.75em; /* Уменьшен шрифт для маленьких экранов */
     text-align: center;
+    gap: 5px;
 }
+
+    #advantages div {
+        flex: 1;
+        min-width: 0;
+    }
 
     #advantages .icon {
         display: block;
