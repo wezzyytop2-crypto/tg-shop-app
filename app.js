@@ -1,53 +1,54 @@
-﻿// app.js
+﻿
 
-// Инициализация Telegram Web App SDK
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// --- НОВЫЙ БЛОК: УСТАНОВКА МЯГКИХ ЦВЕТОВ ---
-const mainColor = '#E6B34A'; // Спокойный золотисто-желтый
+
+const mainColor = '#E6B34A'; 
 const headerColor = '#E6B34A';
 
 tg.setHeaderColor(headerColor);
 tg.MainButton.setParams({
     color: mainColor
 });
-// ---------------------------------------------
 
-// --- 1. Данные: Список ваших товаров (С ИСПРАВЛЕННЫМИ ИМЕНАМИ ФАЙЛОВ) ---
+
+
 const products = {
 
     hoodies_sweats: [
-        { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Новое, с бирками." },
-        // Zip-худи 'Polo Ralph Lauren' - Исправлено имя файла
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "Черное худи на молнии.", image: "images/zip-hoofie_ralph.png" },
-        // Zip-худи 'Burberry' - Исправлено имя файла
-        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Светло-серое, подкладка в клетку.", image: "images/zip-hoodie_burberry.jpg" }
+        { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "SELL. Бежевое худи.", image: "images/essentails.png" },
+        
+        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "IN STOCK. Черное зип-худи.", image: "images/zip-hoofie_ralph.png" },
+        
+        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "SELL. Серое зип-худи.", image: "images/zip-hoodie_burberry.jpg" }
     ],
     t_shirts: [
-        { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "Чёрная футболка Bape." },
-        { id: 402, name: "Футболка 'Stussy' (Базовая)", price: 3200, size: "S", description: "Черный цвет, новый дроп." }
+        { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "SELL. Чёрная футболка Bape.", image: "images/bape.png" },
     ],
 
-    // ПУСТЫЕ МАССИВЫ
+    // ПУСТЫЕ МАССИВЫ для заполнения пустых категорий
     jackets: [],
     sneakers: [],
 
     accessories: [
-        // Рюкзак 'Supreme' (Серебро) - Исправлено имя файла
-        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Продан. Металлический цвет.", image: "images/bag_supreme_silver.png" },
-        // Рюкзак 'Supreme' (Черный) - Исправлено имя файла
-        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Продан. Черный, с белым лого.", image: "images/bag_supreme_black.png" },
+        // Рюкзак 'Supreme' (Серебрянный) 
+        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "SELL. Металлический цвет.", image: "images/bag_supreme_silver.png" },
+        // Рюкзак 'Supreme' (Черный) 
+        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "SELL. Черный, с белым лого.", image: "images/bag_supreme_black.png" },
         // Ремень 'Gucci'
-        { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Продан. Черный ремень, черная пряжка." },
-        // Сумка 'Lacoste' - Исправлено имя файла
-        { id: 504, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Продана. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
-        // Очки 'Chrome Hearts'
-        { id: 505, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Черная оправа." }
+        { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Черный ремень, черная пряжка.", image: "images/black_gold.png" },
+        // Ремень 'Gucci 2'
+        { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "SELL. Бежевый ремень, золотая пряжка.", image: "images/glasses_black.png" },
+        // Сумка 'Lacoste'
+        { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "SELL. Маленькая сумка-мессенджер.", image: "images/mini_bag_lacoste_black.png" },
+        // Очки 'Chrome Hearts1'
+        { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Черная оправа.", image: "images/glasses_black.png" },
+        // Очки 'Chrome Hearts2'
+        { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "SELL. Прозрачная оправа.", image: "images/glasses_white.png" }
     ]
 };
 
-// --- 2. Функционал: Отображение товаров (С ФОТО) ---
 
 function showCategory(categoryKey) {
     const categoryProducts = products[categoryKey] || [];
@@ -69,7 +70,6 @@ function showCategory(categoryKey) {
             const item = document.createElement('div');
             item.className = 'product-item';
 
-            // Формируем ПОЛНЫЙ URL. Если product.image не существует, imageUrl будет null
             const imageUrl = product.image ? baseUrl + product.image : null;
 
             item.innerHTML = `
@@ -90,8 +90,6 @@ function showCategory(categoryKey) {
     tg.MainButton.show();
 }
 
-
-// --- 3. Функционал: Обработка действий пользователя (Кнопка Купить) ---
 
 tg.MainButton.onClick(() => {
     document.getElementById('categories').style.display = 'block';
