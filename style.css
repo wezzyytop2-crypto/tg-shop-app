@@ -1,93 +1,100 @@
-/* style.css */
 
-/* Сброс и использование переменных темы Telegram */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0 15px 15px 15px;
+    padding: 0;
+  
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
 }
 
-/* --- СТИЛИ ДЛЯ ШАПКИ И ЛОГОТИПА --- */
-#shop-header {
-    display: flex;
-    align-items: center;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--tg-theme-secondary-bg-color, #eee);
-}
-
-#logo {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Круглый логотип */
-    margin-right: 15px;
-    object-fit: cover;
-}
-
-#shop-info h2 {
-    margin: 0 0 5px 0;
-    font-size: 18px;
-    color: var(--tg-theme-text-color, #333);
-}
-
-#shop-info p {
-    margin: 0;
-    font-size: 13px;
-    color: var(--tg-theme-hint-color, #666);
-}
-
-/* --- СТИЛИ ДЛЯ ГОРИЗОНТАЛЬНЫХ КАТЕГОРИЙ --- */
-#categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: space-between;
-}
-
-.category-item {
-    flex-grow: 1;
-    flex-basis: calc(50% - 10px);
+header {
+    background-color: var(--tg-theme-header-bg-color, #E6B34A);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    padding: 15px;
     text-align: center;
-    padding: 15px 10px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #E6B34A;
+}
+
+main {
+    padding: 20px;
+}
+
+
+h2 {
+    color: var(--tg-theme-hint-color, #888888);
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+.category-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    text-align: center;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
     background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     color: var(--tg-theme-text-color, #000000);
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
 }
 
-/* Стили для карточек товаров */
+    .category-button:active {
+        background-color: var(--tg-theme-hint-color, #d0d0d0);
+    }
+
+
+#product-list {
+    display: none;
+}
+
 .product-item {
-    border: 1px solid var(--tg-theme-secondary-bg-color, #e0e0e0);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
     .product-item h3 {
+        color: var(--tg-theme-text-color, #333333);
         margin-top: 0;
-        font-size: 18px;
     }
 
     .product-item p {
-        margin-bottom: 5px;
+        margin: 5px 0;
     }
 
-    .product-item button {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        /* Мягкий Золотисто-желтый цвет */
-        background-color: #E6B34A;
-        color: var(--tg-theme-button-text-color, #ffffff);
+
+.button-group {
+    display: flex;
+    gap: 10px; 
+    margin-top: 15px;
+}
+
+    
+    .button-group button {
+        flex: 1; 
+        padding: 12px 10px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
     }
+
+.buy-button {
+    background-color: #E6B34A; 
+    color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+
+.photo-button {
+    background-color: var(--tg-theme-hint-color, #cccccc); 
+    color: var(--tg-theme-text-color, #000000);
+}

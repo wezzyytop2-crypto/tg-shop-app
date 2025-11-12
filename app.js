@@ -12,15 +12,13 @@ tg.MainButton.setParams({
     color: mainColor
 });
 
-
-
 const products = {
 
     hoodies_sweats: [
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "SELL. Бежевое худи.", image: "images/essentails.png" },
         
         { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "IN STOCK. Черное зип-худи.", image: "images/zip-hoofie_ralph.png" },
-        
+       
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "SELL. Серое зип-худи.", image: "images/zip-hoodie_burberry.jpg" }
     ],
     t_shirts: [
@@ -50,8 +48,11 @@ const products = {
 };
 
 
+
+
 function showCategory(categoryKey) {
     const categoryProducts = products[categoryKey] || [];
+    
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.getElementById('categories').style.display = 'none';
@@ -70,7 +71,9 @@ function showCategory(categoryKey) {
             const item = document.createElement('div');
             item.className = 'product-item';
 
-            const imageUrl = product.image ? baseUrl + product.image : null;
+   
+            const imageFileName = product.image ? product.image.toLowerCase() : null;
+            const imageUrl = product.image ? baseUrl + imageFileName : null;
 
             item.innerHTML = `
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
@@ -80,7 +83,10 @@ function showCategory(categoryKey) {
                 <p>${product.description}</p>
                 <p>Цена: **${product.price} руб.**</p>
 
-                <button onclick="buyProduct(${product.id}, \`${product.name}\`, ${product.price})">Купить / Заказать</button>
+                <div class="button-group">
+                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${product.price})">Купить / Заказать</button>
+                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить детальные фото</button>
+                </div>
             `;
             productListDiv.appendChild(item);
         });
@@ -91,14 +97,10 @@ function showCategory(categoryKey) {
 }
 
 
-tg.MainButton.onClick(() => {
-    document.getElementById('categories').style.display = 'block';
-    document.getElementById('product-list').style.display = 'none';
-    tg.MainButton.hide();
-});
+
 
 function buyProduct(id, name, price) {
-    const sellerUsername = 'ulans_sttore';
+    const sellerUsername = 'ulans_sttore'; 
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
@@ -110,3 +112,26 @@ function buyProduct(id, name, price) {
         tg.showAlert(`Вы выбрали: ${name} за ${price} руб. Откройте чат с продавцом @${sellerUsername} для оформления заказа.`);
     }
 }
+
+
+function requestPhotos(id, name) {
+    const sellerUsername = 'ulans_sttore'; 
+    const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
+    const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
+
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(telegramUrl);
+        tg.showAlert(`Запрос детальных фото ${name} отправлен продавцу @${sellerUsername}. Откроется чат.`);
+    } else {
+        window.open(telegramUrl, '_blank');
+        tg.showAlert(`Вы запросили фото: ${name}. Откройте чат с продавцом @${sellerUsername}.`);
+    }
+}
+
+
+
+tg.MainButton.onClick(() => {
+    document.getElementById('categories').style.display = 'block';
+    document.getElementById('product-list').style.display = 'none';
+    tg.MainButton.hide();
+});
