@@ -4,6 +4,12 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
 
+// --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
+// Курс для конвертации: 1 MDL = 0.94 ПМР
+// Для расчета MDL из ПМР, используем обратный коэффициент: 1 / 0.94
+const PMR_TO_MDL_RATE = 1 / 0.94;
+// ---------------------------------
+
 // --- 1. Настройка UI (Цвета) ---
 const mainColor = '#E6B34A';
 const headerColor = '#E6B34A';
@@ -14,7 +20,15 @@ tg.MainButton.setParams({
 });
 // ---------------------------------------------
 
-// --- 2. Данные: Список ваших товаров (Исправлены дубликаты ID) ---
+// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ В ПМР ДО БЛИЖАЙШЕГО КРАТНОГО 5 ---
+function roundToNearestFive(price) {
+    // Округляем цену в ПМР до ближайшего числа, оканчивающегося на 0 или 5
+    return Math.round(price / 5) * 5;
+}
+
+
+// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
+// ВНИМАНИЕ: Все цены в массивах ниже должны быть в ПМР!
 const products = {
 
     hoodies_sweats: [
@@ -65,16 +79,23 @@ function showCategory(categoryKey) {
 
             const imageUrl = product.image ? baseUrl + product.image : null;
 
+            // 1. Округление цены в ПМР до ближайшего 5
+            const roundedPmrPrice = roundToNearestFive(product.price);
+
+            // 2. Расчет цены в MDL (от округленной цены в ПМР) и округление до целых
+            const mdlPrice = Math.round(roundedPmrPrice * PMR_TO_MDL_RATE);
+
             item.innerHTML = `
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
 
                 <h3>${product.name}</h3>
                 <p><strong>Размер:</strong> ${product.size}</p>
                 <p>${product.description}</p>
-                <p>Цена: **${product.price} руб.**</p>
+
+                <p>Цена: **${roundedPmrPrice} ПМР** / ~${mdlPrice} MDL</p>
 
                 <div class="button-group">
-                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${product.price})">Купить / Заказать</button>
+                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">Купить / Заказать</button>
                     <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить детальные фото</button>
                 </div>
             `;
@@ -87,11 +108,12 @@ function showCategory(categoryKey) {
 }
 
 
-// --- 4. Функционал: Обработка действия "Купить" ---
+// --- 4. Функционал: Обработка действия "Купить" (использует ОКРУГЛЕННУЮ цену в ПМР) ---
 
 function buyProduct(id, name, price) {
-    const sellerUsername = 'ulans_sttore'; // Имя продавца
-    const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} руб.`);
+    const sellerUsername = 'ulans_sttore';
+    // Цена уже округлена и передается как аргумент price (в ПМР)
+    const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
     if (tg && tg.openTelegramLink) {
@@ -104,7 +126,7 @@ function buyProduct(id, name, price) {
 // --- 5. НОВЫЙ ФУНКЦИОНАЛ: Обработка действия "Запросить детальные фото" ---
 
 function requestPhotos(id, name) {
-    const sellerUsername = 'ulans_sttore'; // Имя продавца
+    const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 

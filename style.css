@@ -59,12 +59,19 @@ h2 {
     margin-bottom: 25px;
 }
 
-/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ (Рамки) --- */
+/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ (Рамки и Сетка) --- */
+#categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Создает 2 равные колонки */
+    gap: 10px; /* Расстояние между кнопками */
+    margin-bottom: 25px;
+}
+
 .category-button {
     display: block;
-    width: 100%;
+    width: 100%; /* Убрано, так как grid сам управляет шириной */
     padding: 15px;
-    margin-bottom: 12px;
+    margin: 0; /* Убраны вертикальные отступы, теперь ими управляет gap */
     font-size: 1.1em;
     text-align: center;
     border: none;
@@ -111,7 +118,6 @@ h2 {
     .button-group button {
         flex: 1;
         padding: 12px 10px;
-        border: none;
         border-radius: 6px;
         cursor: pointer;
         font-size: 14px;
@@ -121,9 +127,12 @@ h2 {
 .buy-button {
     background-color: #E6B34A;
     color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
 }
 
 .photo-button {
-    background-color: var(--tg-theme-hint-color, #cccccc);
+    /* Обновленный стиль: прозрачный фон с рамкой */
+    background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
+    border: 2px solid var(--tg-theme-hint-color, #cccccc);
 }
