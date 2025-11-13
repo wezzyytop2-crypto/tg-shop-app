@@ -3,6 +3,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
+    /* Используем TWA переменные для адаптивности к светлой/темной теме */
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
     line-height: 1.6;
@@ -43,10 +44,11 @@ header {
 /* --- Main Content --- */
 main {
     padding: 25px;
+    /* Добавляем отступ для Главной Кнопки TWA, чтобы контент не перекрывался */
     padding-bottom: 100px;
 }
 
-/* --- НОВЫЕ СТИЛИ ДЛЯ ЛОГОТИПА И ОПИСАНИЯ --- */
+/* --- Стили для ЛОГОТИПА и ОПИСАНИЯ --- */
 #store-info {
     text-align: center;
     margin-bottom: 25px;
@@ -55,7 +57,7 @@ main {
 }
 
 #store-logo {
-    width: 70px; /* Увеличим логотип, чтобы он был заметен */
+    width: 70px;
     height: 70px;
     border-radius: 50%; /* Круглая форма */
     object-fit: cover;
@@ -66,11 +68,11 @@ main {
 .store-description {
     font-size: 0.9em;
     color: var(--tg-theme-text-color, #000000);
-    max-width: 400px; /* Ограничим ширину для лучшей читаемости */
+    max-width: 400px;
     margin: 0 auto;
     font-weight: 400;
 }
-/* --- КОНЕЦ НОВЫХ СТИЛЕЙ --- */
+/* --- КОНЕЦ СТИЛЕЙ ЛОГОТИПА --- */
 
 
 /* Заголовок категории - стиль LoveCross */
@@ -81,7 +83,7 @@ h2 {
     font-size: 1.3em;
     font-weight: 700;
     text-transform: uppercase;
-    /* Уберем нижнюю линию у h2, так как она уже есть у #store-info */
+    /* Уберем нижнюю линию, так как она уже есть у #store-info */
     border-bottom: none;
     padding-bottom: 0;
 }
@@ -249,6 +251,7 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
+    /* Используем flex для корректного отображения преимуществ */
     display: flex;
     flex-direction: column;
     background-color: var(--tg-theme-secondary-bg-color, #ffffff);

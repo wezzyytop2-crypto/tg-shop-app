@@ -1,13 +1,15 @@
-﻿// app.js (Режим: Telegram Mini App v=4.3 - Добавлен Логотип и Описание)
+﻿// app.js (Режим: Telegram Mini App v=4.4 - Желтая Главная Кнопка)
 
 // --- 1. Настройка TWA и Цвета ---
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-const mainColor = '#000000'; // Черный для главной кнопки
+// ИЗМЕНЕНИЕ: Цвет Главной кнопки на ЖЕЛТЫЙ (#F7B228)
+const mainColor = '#F7B228'; // Желто-оранжевый
 // Используем цвета темы Telegram для адаптивности
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
-const buttonTextColor = tg.themeParams.button_text_color || '#ffffff';
+// Для желтой кнопки текст лучше сделать черным для контраста
+const buttonTextColor = tg.themeParams.text_color || '#000000';
 
 tg.setHeaderColor(headerColor);
 tg.MainButton.setParams({
@@ -58,7 +60,6 @@ const products = {
 
 function showCategory(categoryKey, categoryName) {
     const categoryProducts = products[categoryKey] || [];
-    // Используйте вашу публичную ссылку для картинок
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.title = `U L A N S _ S T O R E — ${categoryName}`;
