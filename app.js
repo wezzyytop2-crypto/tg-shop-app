@@ -1,15 +1,16 @@
-﻿// app.js (Режим: Telegram Mini App v=4.4 - Желтая Главная Кнопка)
+﻿// app.js (Режим: Telegram Mini App v=4.5 - Серая Главная Кнопка)
 
 // --- 1. Настройка TWA и Цвета ---
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// ИЗМЕНЕНИЕ: Цвет Главной кнопки на ЖЕЛТЫЙ (#F7B228)
-const mainColor = '#F7B228'; // Желто-оранжевый
-// Используем цвета темы Telegram для адаптивности
+// ИЗМЕНЕНИЕ: Цвет Главной кнопки на СЕРЫЙ (#404040)
+const mainColor = '#404040'; // Серый фон
+// ИЗМЕНЕНИЕ: Цвет текста кнопки на БЕЛЫЙ
+const buttonTextColor = '#ffffff'; // Белый текст
+
+// Используем цвета темы Telegram для шапки и фона
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
-// Для желтой кнопки текст лучше сделать черным для контраста
-const buttonTextColor = tg.themeParams.text_color || '#000000';
 
 tg.setHeaderColor(headerColor);
 tg.MainButton.setParams({
