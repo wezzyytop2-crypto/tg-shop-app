@@ -1,34 +1,29 @@
-﻿// app.js
+﻿// app.js (Режим: Стандартный Веб-сайт v=3.0)
 
-// Инициализация Telegram Web App SDK
-const tg = window.Telegram.WebApp;
-tg.ready();
+// ----------------------------------------------------------------------
+// Инициализация Telegram Web App SDK - КОММЕНТИРУЕТСЯ В РЕЖИМЕ ВЕБ-САЙТА
+// const tg = window.Telegram.WebApp;
+// tg.ready();
+// ----------------------------------------------------------------------
 
 // --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
-// Курс: 1 MDL = 0.94 ПМР
-// Для расчета MDL из ПМР, используем обратный коэффициент: 1 / 0.94
 const PMR_TO_MDL_RATE = 1 / 0.94;
 // ---------------------------------
 
-// --- 1. Настройка UI (Цвета) ---
-const mainColor = '#E6B34A';
-const headerColor = '#E6B34A';
-
-tg.setHeaderColor(headerColor);
-tg.MainButton.setParams({
-    color: mainColor
-});
+// --- 1. Настройка UI (Удалено управление цветами TWA) ---
+// const mainColor = '#000000'; 
+// const headerColor = '#000000'; 
+// if (tg && tg.setHeaderColor) tg.setHeaderColor(headerColor);
+// if (tg && tg.MainButton) tg.MainButton.setParams({ color: mainColor });
 // ---------------------------------------------
 
-// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА (Оканчивается на 0) ---
+// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА ---
 function roundToNearestTen(price) {
-    // Округляет до ближайшего десятка (например, 467 -> 470; 464 -> 460)
     return Math.round(price / 10) * 10;
 }
 
 
 // --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
-// ВНИМАНИЕ: Все цены в массивах ниже должны быть в ПМР!
 const products = {
 
     hoodies_sweats: [
@@ -55,25 +50,25 @@ const products = {
 };
 
 
-// --- 3. Функционал: Отображение товаров (С ДВУМЯ КНОПКАМИ и ДИНАМИЧЕСКИМ ЗАГОЛОВКОМ) ---
+// --- 3. Функционал: Отображение товаров ---
 
 function showCategory(categoryKey, categoryName) {
     const categoryProducts = products[categoryKey] || [];
-    const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
+    const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/"; // Используйте ваш актуальный базовый URL
 
-    // Устанавливаем динамический заголовок
     document.title = `U L A N S _ S T O R E — ${categoryName}`;
 
-    document.getElementById('categories').style.display = 'none';
+    document.getElementById('category-view').style.display = 'none';
     const productListDiv = document.getElementById('product-list');
-    productListDiv.innerHTML = '';
+    const productsContainer = document.getElementById('product-items-container');
+
+    productsContainer.innerHTML = '';
     productListDiv.style.display = 'block';
 
-    // Скрываем Футер с преимуществами, когда показываем товары
     document.querySelector('footer').style.display = 'none';
 
     if (categoryProducts.length === 0) {
-        productListDiv.innerHTML = `
+        productsContainer.innerHTML = `
             <div class="product-item" style="text-align: center; border: none;">
                 <h3>Товаров в этой категории пока нет 😞</h3>
             </div>
@@ -85,17 +80,12 @@ function showCategory(categoryKey, categoryName) {
 
             const imageUrl = product.image ? baseUrl + product.image : null;
 
-            // 1. Округление цены в ПМР до ближайшего 10
             const roundedPmrPrice = roundToNearestTen(product.price);
-
-            // 2. Расчет цены в MDL (от округленной цены в ПМР)
             const rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
-
-            // 3. Округление расчетной цены MDL до ближайшего 10
             const roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
             item.innerHTML = `
-                ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width:100%; height:auto; border-radius: 8px; margin-bottom: 10px;">` : ''}
+                ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}">` : ''}
 
                 <h3>${product.name}</h3>
                 <p><strong>Размер:</strong> ${product.size}</p>
@@ -105,58 +95,44 @@ function showCategory(categoryKey, categoryName) {
 
                 <div class="button-group">
                     <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">Купить / Заказать</button>
-                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить детальные фото</button>
+                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить фото</button>
                 </div>
             `;
-            productListDiv.appendChild(item);
+            productsContainer.appendChild(item);
         });
     }
-
-    tg.MainButton.setText("← Вернуться к категориям");
-    tg.MainButton.show();
 }
 
 
-// --- 4. Функционал: Обработка действия "Купить" (использует ОКРУГЛЕННУЮ цену в ПМР) ---
+// --- 4. Функционал: Обработка действия "Купить" (Открывает Telegram в новом окне) ---
 
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
-    // Цена уже округлена и передается как аргумент price (в ПМР)
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(telegramUrl);
-    } else {
-        window.open(telegramUrl, '_blank');
-    }
+    // Используем window.open() для веб-сайта
+    window.open(telegramUrl, '_blank');
 }
 
-// --- 5. НОВЫЙ ФУНКЦИОНАЛ: Обработка действия "Запросить детальные фото" ---
+// --- 5. Функционал: Обработка действия "Запросить детальные фото" (Открывает Telegram в новом окне) ---
 
 function requestPhotos(id, name) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(telegramUrl);
-    } else {
-        window.open(telegramUrl, '_blank');
-    }
+    // Используем window.open() для веб-сайта
+    window.open(telegramUrl, '_blank');
 }
 
-// --- 6. Функционал: Кнопка "Назад" ---
+// --- 6. Функционал: Кнопка "Назад" (Замена TWA MainButton) ---
 
-tg.MainButton.onClick(() => {
-    document.getElementById('categories').style.display = 'block';
+function goBack() {
+    document.getElementById('category-view').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
 
-    // Восстанавливаем динамический заголовок
     document.title = 'U L A N S _ S T O R E';
 
-    // Показываем Футер с преимуществами
     document.querySelector('footer').style.display = 'flex';
-
-    tg.MainButton.hide();
-});
+}

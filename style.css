@@ -3,16 +3,17 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
+    /* Используем базовые цвета для веб-сайта, так как TWA переменных нет */
+    background-color: #ffffff;
+    color: #000000;
 }
 
-/* --- Стилизация Шапки (Header) --- */
+/* --- Стилизация Шапки --- */
 header {
-    background-color: var(--tg-theme-header-bg-color, #E6B34A);
-    color: var(--tg-theme-button-text-color, #ffffff);
+    background-color: #000000;
+    color: #ffffff;
     padding: 10px 15px;
-    border-bottom: 2px solid #E6B34A;
+    border-bottom: 1px solid #000000;
 }
 
 #shop-header {
@@ -24,21 +25,19 @@ header {
 #logo {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 0%;
     object-fit: cover;
     flex-shrink: 0;
+    border: 1px solid #ffffff;
 }
 
-#shop-info {
-    flex-grow: 1;
+#shop-info h2 {
+    color: #ffffff;
+    margin: 0;
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: 600;
 }
-
-    #shop-info h2 {
-        color: var(--tg-theme-button-text-color, #ffffff);
-        margin: 0;
-        text-align: left;
-        font-size: 1.1em;
-    }
 
 /* --- Стили для основного контента --- */
 main {
@@ -47,10 +46,27 @@ main {
 }
 
 h2 {
-    color: var(--tg-theme-text-color, #333333);
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.3em;
+    color: #000000;
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 2px solid #cccccc;
+    padding-bottom: 5px;
+}
+
+/* --- СТИЛИ ДЛЯ КНОПКИ НАЗАД (НОВАЯ) --- */
+#back-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 /* --- СТИЛИ ДЛЯ КАТЕГОРИЙ --- */
@@ -62,96 +78,114 @@ h2 {
 }
 
 .category-button {
-    display: block;
-    width: 100%;
     padding: 15px;
-    margin: 0;
     font-size: 1.1em;
-    text-align: center;
-    border: 1px solid var(--tg-theme-hint-color, #cccccc);
-    border-radius: 8px;
-    cursor: pointer;
+    border: 1px solid #000000;
+    border-radius: 0;
     background-color: transparent;
-    color: var(--tg-theme-text-color, #000000);
+    color: #000000;
+    font-weight: 600;
     transition: background-color 0.2s;
 }
 
-    .category-button:active {
-        background-color: var(--tg-theme-hint-color, #d0d0d0);
+    .category-button:active, .category-button:hover {
+        background-color: #000000;
+        color: #ffffff;
     }
 
-/* Стили для списка товаров (Галерея с рамкой) */
-.product-item {
-    background-color: transparent;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--tg-theme-hint-color, #dddddd);
-    box-shadow: none;
+
+/* --- Product Cards (Минимализм) --- */
+#product-items-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Можно использовать 1 колонку или 2 */
+    gap: 20px;
 }
 
+.product-item {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: 1px solid #dddddd;
+}
+
+    .product-item img {
+        border-radius: 0;
+        margin-bottom: 0 !important;
+    }
+
     .product-item h3 {
-        color: var(--tg-theme-text-color, #333333);
-        margin-top: 0;
+        margin: 10px 15px 5px 15px;
+        font-size: 1em;
+        font-weight: 700;
     }
 
     .product-item p {
-        margin: 5px 0;
+        margin: 5px 15px;
+        font-size: 0.9em;
     }
 
-        /* --- Акцент на цене --- */
-        .product-item p strong {
-            font-size: 1.2em;
-            color: var(--tg-theme-text-color, #000000);
+        .product-item p:last-of-type {
+            margin: 10px 15px 15px 15px;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #000000;
         }
 
-/* --- Стили для двух кнопок товара (Контраст) --- */
+        .product-item p strong {
+            font-size: 1em;
+            font-weight: 900;
+            color: #000000;
+        }
+
+
+/* --- Кнопки --- */
 .button-group {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 0;
+    margin-top: 0;
+    border-top: 1px solid #dddddd;
 }
 
     .button-group button {
         flex: 1;
-        padding: 12px 10px;
-        border-radius: 6px;
-        cursor: pointer;
+        padding: 15px 10px;
+        border-radius: 0;
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 700;
+        cursor: pointer;
     }
 
-/* Кнопка Купить/Заказать - ИСПРАВЛЕННЫЙ КОНТРАСТ */
 .buy-button {
-    background-color: #D69F3C; /* Более темный, контрастный цвет */
-    color: var(--tg-theme-button-text-color, #ffffff);
+    background-color: #000000;
+    color: #ffffff;
     border: none;
 }
 
-/* Запросить фото - Прозрачный, рамка */
 .photo-button {
     background-color: transparent;
-    color: var(--tg-theme-text-color, #000000);
-    border: 2px solid var(--tg-theme-hint-color, #cccccc);
+    color: #000000;
+    border: 1px solid #000000;
+    border-left: none;
 }
 
-/* --- Стили для Футера (Адаптивность ИСПРАВЛЕНА) --- */
+/* --- Footer (Адаптивный) --- */
 footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    color: var(--tg-theme-hint-color, #888888);
-    padding: 10px 10px; /* Уменьшен padding */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f7f7f7;
+    color: #666666;
+    padding: 10px 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
     z-index: 100;
+    border-top: 1px solid #dddddd;
 }
 
 #advantages {
     display: flex;
-    justify-content: space-between; /* Равномерное распределение */
-    font-size: 0.75em; /* Уменьшен шрифт для маленьких экранов */
+    justify-content: space-between;
+    font-size: 0.7em;
     text-align: center;
     gap: 5px;
 }
@@ -159,10 +193,17 @@ footer {
     #advantages div {
         flex: 1;
         min-width: 0;
+        padding: 0 5px;
     }
 
     #advantages .icon {
         display: block;
         margin-bottom: 3px;
-        font-size: 1.2em;
+        font-size: 1.1em;
     }
+
+@media (max-width: 350px) {
+    #advantages {
+        font-size: 0.65em;
+    }
+}
