@@ -1,10 +1,27 @@
-﻿// app.js (Режим: Стандартный Веб-сайт v=3.1 - LoveCross Style)
+﻿// app.js (Режим: Telegram Mini App v=4.3 - Добавлен Логотип и Описание)
+
+// --- 1. Настройка TWA и Цвета ---
+const tg = window.Telegram.WebApp;
+tg.ready();
+
+const mainColor = '#000000'; // Черный для главной кнопки
+// Используем цвета темы Telegram для адаптивности
+const headerColor = tg.themeParams.header_bg_color || '#ffffff';
+const buttonTextColor = tg.themeParams.button_text_color || '#ffffff';
+
+tg.setHeaderColor(headerColor);
+tg.MainButton.setParams({
+    color: mainColor,
+    text_color: buttonTextColor
+});
+// ---------------------------------
+
 
 // --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
 const PMR_TO_MDL_RATE = 1 / 0.94;
 // ---------------------------------
 
-// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА ---
+// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ---
 function roundToNearestTen(price) {
     return Math.round(price / 10) * 10;
 }
@@ -41,6 +58,7 @@ const products = {
 
 function showCategory(categoryKey, categoryName) {
     const categoryProducts = products[categoryKey] || [];
+    // Используйте вашу публичную ссылку для картинок
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.title = `U L A N S _ S T O R E — ${categoryName}`;
@@ -50,12 +68,12 @@ function showCategory(categoryKey, categoryName) {
     const productsContainer = document.getElementById('product-items-container');
     const currentCategoryTitle = document.getElementById('current-category-title');
 
-    currentCategoryTitle.textContent = categoryName.toUpperCase(); // Устанавливаем заголовок категории
+    currentCategoryTitle.textContent = categoryName.toUpperCase();
 
     productsContainer.innerHTML = '';
     productListDiv.style.display = 'block';
 
-    document.querySelector('footer').style.display = 'none'; // Скрываем футер в режиме просмотра товаров
+    document.querySelector('footer').style.display = 'none'; // Скрываем футер
 
     if (categoryProducts.length === 0) {
         productsContainer.innerHTML = `
@@ -93,38 +111,56 @@ function showCategory(categoryKey, categoryName) {
             productsContainer.appendChild(item);
         });
     }
+
+    // Включаем TWA MainButton для навигации "Назад"
+    tg.MainButton.setText("← BACK TO CATEGORIES");
+    tg.MainButton.show();
 }
 
 
-// --- 4. Функционал: Обработка действия "Купить" ---
+// --- 4. Функционал: Обработка действия "Купить" (Используем TWA openTelegramLink) ---
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    window.open(telegramUrl, '_blank');
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(telegramUrl);
+    } else {
+        window.open(telegramUrl, '_blank'); // Запасной вариант
+    }
 }
 
-// --- 5. Функционал: Обработка действия "Запросить детальные фото" ---
+// --- 5. Функционал: Обработка действия "Запросить детальные фото" (Используем TWA openTelegramLink) ---
 function requestPhotos(id, name) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    window.open(telegramUrl, '_blank');
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(telegramUrl);
+    } else {
+        window.open(telegramUrl, '_blank'); // Запасной вариант
+    }
 }
 
-// --- 6. Функционал: Кнопка "Назад" ---
+// --- 6. Функционал: TWA MainButton (Кнопка "Назад") ---
+tg.MainButton.onClick(goBack);
+
 function goBack() {
     document.getElementById('category-view').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
 
-    document.title = 'U L A N S _ S T O R E | Fashion Store'; // Восстанавливаем основной заголовок
+    document.title = 'U L A N S _ S T O R E | Fashion Store';
 
-    document.querySelector('footer').style.display = 'block'; // Показываем футер
+    // ИСПРАВЛЕНИЕ: Теперь футер всегда отображается корректно на главной странице
+    document.querySelector('footer').style.display = 'flex';
+
+    // Скрываем TWA MainButton на главном экране
+    tg.MainButton.hide();
 }
 
 // --- 7. Функционал: Кнопка "Домой" (при клике на название магазина в шапке) ---
 function goHome() {
-    goBack(); // Используем ту же логику, что и для кнопки "Назад"
+    goBack();
 }
