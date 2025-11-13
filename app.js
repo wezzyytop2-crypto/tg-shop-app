@@ -1,21 +1,8 @@
-﻿// app.js (Режим: Стандартный Веб-сайт v=3.0)
-
-// ----------------------------------------------------------------------
-// Инициализация Telegram Web App SDK - КОММЕНТИРУЕТСЯ В РЕЖИМЕ ВЕБ-САЙТА
-// const tg = window.Telegram.WebApp;
-// tg.ready();
-// ----------------------------------------------------------------------
+﻿// app.js (Режим: Стандартный Веб-сайт v=3.1 - LoveCross Style)
 
 // --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
 const PMR_TO_MDL_RATE = 1 / 0.94;
 // ---------------------------------
-
-// --- 1. Настройка UI (Удалено управление цветами TWA) ---
-// const mainColor = '#000000'; 
-// const headerColor = '#000000'; 
-// if (tg && tg.setHeaderColor) tg.setHeaderColor(headerColor);
-// if (tg && tg.MainButton) tg.MainButton.setParams({ color: mainColor });
-// ---------------------------------------------
 
 // --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ДО БЛИЖАЙШЕГО ЦЕЛОГО ДЕСЯТКА ---
 function roundToNearestTen(price) {
@@ -54,22 +41,25 @@ const products = {
 
 function showCategory(categoryKey, categoryName) {
     const categoryProducts = products[categoryKey] || [];
-    const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/"; // Используйте ваш актуальный базовый URL
+    const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
     document.title = `U L A N S _ S T O R E — ${categoryName}`;
 
     document.getElementById('category-view').style.display = 'none';
     const productListDiv = document.getElementById('product-list');
     const productsContainer = document.getElementById('product-items-container');
+    const currentCategoryTitle = document.getElementById('current-category-title');
+
+    currentCategoryTitle.textContent = categoryName.toUpperCase(); // Устанавливаем заголовок категории
 
     productsContainer.innerHTML = '';
     productListDiv.style.display = 'block';
 
-    document.querySelector('footer').style.display = 'none';
+    document.querySelector('footer').style.display = 'none'; // Скрываем футер в режиме просмотра товаров
 
     if (categoryProducts.length === 0) {
         productsContainer.innerHTML = `
-            <div class="product-item" style="text-align: center; border: none;">
+            <div class="product-item" style="text-align: center; border: none; padding: 20px;">
                 <h3>Товаров в этой категории пока нет 😞</h3>
             </div>
         `;
@@ -87,15 +77,17 @@ function showCategory(categoryKey, categoryName) {
             item.innerHTML = `
                 ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}">` : ''}
 
-                <h3>${product.name}</h3>
-                <p><strong>Размер:</strong> ${product.size}</p>
-                <p>${product.description}</p>
+                <div class="product-text-content">
+                    <h3>${product.name}</h3>
+                    <p><strong>Size:</strong> ${product.size}</p>
+                    <p>${product.description}</p>
 
-                <p>Цена: <strong>${roundedPmrPrice} ПМР</strong> / ~${roundedMdlPrice} MDL</p>
+                    <p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>
 
-                <div class="button-group">
-                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">Купить / Заказать</button>
-                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">Запросить фото</button>
+                    <div class="button-group">
+                        <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
+                        <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">REQUEST PHOTOS</button>
+                    </div>
                 </div>
             `;
             productsContainer.appendChild(item);
@@ -104,35 +96,35 @@ function showCategory(categoryKey, categoryName) {
 }
 
 
-// --- 4. Функционал: Обработка действия "Купить" (Открывает Telegram в новом окне) ---
-
+// --- 4. Функционал: Обработка действия "Купить" ---
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    // Используем window.open() для веб-сайта
     window.open(telegramUrl, '_blank');
 }
 
-// --- 5. Функционал: Обработка действия "Запросить детальные фото" (Открывает Telegram в новом окне) ---
-
+// --- 5. Функционал: Обработка действия "Запросить детальные фото" ---
 function requestPhotos(id, name) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
-    // Используем window.open() для веб-сайта
     window.open(telegramUrl, '_blank');
 }
 
-// --- 6. Функционал: Кнопка "Назад" (Замена TWA MainButton) ---
-
+// --- 6. Функционал: Кнопка "Назад" ---
 function goBack() {
     document.getElementById('category-view').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
 
-    document.title = 'U L A N S _ S T O R E';
+    document.title = 'U L A N S _ S T O R E | Fashion Store'; // Восстанавливаем основной заголовок
 
-    document.querySelector('footer').style.display = 'flex';
+    document.querySelector('footer').style.display = 'block'; // Показываем футер
+}
+
+// --- 7. Функционал: Кнопка "Домой" (при клике на название магазина в шапке) ---
+function goHome() {
+    goBack(); // Используем ту же логику, что и для кнопки "Назад"
 }

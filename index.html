@@ -5,33 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>U L A N S _ S T O R E | Fashion Store</title>
 
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.1">
 </head>
 <body>
 
     <header>
         <div id="shop-header">
-            <img src="images/logo.jpg" alt="Логотип ulans_store" id="logo">
-            <div id="shop-info">
-                <h2>U L A N S _ S T O R E</h2>
-            </div>
+            <a href="#" onclick="goHome()" class="header-title-link">
+                <h1>U L A N S _ S T O R E</h1>
+            </a>
         </div>
     </header>
 
     <main>
         <div id="category-view">
-            <h2>Выберите категорию:</h2>
-            <div id="categories">
-                <button class="category-button" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">Худи и Свитшоты</button>
-                <button class="category-button" onclick="showCategory('t_shirts', 'Футболки')">Футболки</button>
-                <button class="category-button" onclick="showCategory('jackets', 'Куртки')">Куртки</button>
-                <button class="category-button" onclick="showCategory('sneakers', 'Обувь')">Обувь</button>
-                <button class="category-button" onclick="showCategory('accessories', 'Аксессуары')">Аксессуары</button>
+            <h2>Categories</h2> <div id="categories">
+                <button class="category-button" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">HOODIES</button>
+                <button class="category-button" onclick="showCategory('t_shirts', 'Футболки')">T-SHIRTS</button>
+                <button class="category-button" onclick="showCategory('jackets', 'Куртки')">JACKETS</button>
+                <button class="category-button" onclick="showCategory('sneakers', 'Обувь')">SNEAKERS</button>
+                <button class="category-button" onclick="showCategory('accessories', 'Аксессуары')">ACCESSORIES</button>
             </div>
         </div>
 
         <div id="product-list" style="display:none;">
-            <button id="back-button" onclick="goBack()">← Вернуться к категориям</button>
+            <div class="product-list-header">
+                <button id="back-button" onclick="goBack()">← BACK</button>
+                <h2 id="current-category-title"></h2>
+            </div>
+
             <div id="product-items-container">
             </div>
         </div>
@@ -39,13 +42,13 @@
 
     <footer>
         <div id="advantages">
-            <div><span class="icon">🚚</span> Доставка по ПМР/МДЛ</div>
-            <div><span class="icon">🛡️</span> Гарантия качества</div>
-            <div><span class="icon">💬</span> Поддержка 24/7</div>
+            <div><span class="icon">🚚</span> DELIVERY</div>
+            <div><span class="icon">🛡️</span> QUALITY</div>
+            <div><span class="icon">💬</span> SUPPORT</div>
         </div>
+        <p class="copyright">&copy; 2023 ULANS_STORE. All Rights Reserved.</p>
     </footer>
 
-
-    <script src="app.js?v=3.0"></script>
+    <script src="app.js?v=3.1"></script>
 </body>
 </html>

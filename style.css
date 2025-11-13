@@ -1,149 +1,203 @@
-﻿/* Общие стили и сброс */
+﻿/* --- Глобальные стили и сброс --- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif; /* Используем Open Sans */
     margin: 0;
     padding: 0;
-    /* Используем базовые цвета для веб-сайта, так как TWA переменных нет */
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #ffffff; /* Белый фон */
+    color: #000000; /* Черный текст */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Стилизация Шапки --- */
+/* --- Header Styles --- */
 header {
-    background-color: #000000;
-    color: #ffffff;
-    padding: 10px 15px;
-    border-bottom: 1px solid #000000;
+    background-color: #ffffff; /* Белый фон шапки */
+    padding: 20px 25px; /* Увеличенные отступы */
+    border-bottom: 1px solid #e0e0e0; /* Тонкая серая линия */
+    text-align: center; /* Центрируем заголовок */
+    position: sticky; /* Фиксируем шапку */
+    top: 0;
+    z-index: 100;
 }
 
 #shop-header {
     display: flex;
+    justify-content: center; /* Центрируем содержимое */
     align-items: center;
-    gap: 10px;
 }
 
-#logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 0%;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 1px solid #ffffff;
+.header-title-link {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: #000000; /* Черный цвет текста */
 }
 
-#shop-info h2 {
-    color: #ffffff;
+#shop-header h1 {
     margin: 0;
-    text-align: left;
-    font-size: 1.1em;
-    font-weight: 600;
+    font-size: 1.8em; /* Крупнее, как у LoveCross */
+    font-weight: 700; /* Более жирный */
+    letter-spacing: 2px; /* Расстояние между буквами */
+    text-transform: uppercase;
 }
 
-/* --- Стили для основного контента --- */
+/* --- Main Content --- */
 main {
-    padding: 20px;
-    padding-bottom: 80px;
+    padding: 25px; /* Увеличенные отступы */
+    padding-bottom: 120px; /* Отступ для футера */
 }
 
+/* Заголовок категории - стиль LoveCross */
 h2 {
     color: #000000;
-    text-align: left;
-    margin-bottom: 15px;
-    font-size: 1.5em;
+    text-align: left; /* Выравнивание по левому краю */
+    margin-bottom: 20px;
+    font-size: 1.3em;
     font-weight: 700;
     text-transform: uppercase;
-    border-bottom: 2px solid #cccccc;
-    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0; /* Тонкий разделитель */
+    padding-bottom: 10px;
 }
 
-/* --- СТИЛИ ДЛЯ КНОПКИ НАЗАД (НОВАЯ) --- */
-#back-button {
-    width: 100%;
-    padding: 12px;
+/* --- Кнопка НАЗАД и заголовок категории (в списке товаров) --- */
+.product-list-header {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
-    background-color: #f0f0f0;
-    color: #000000;
-    border: 1px solid #cccccc;
-    border-radius: 0;
-    cursor: pointer;
-    font-size: 1em;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
 }
 
-/* --- СТИЛИ ДЛЯ КАТЕГОРИЙ --- */
+#back-button {
+    background-color: transparent;
+    color: #000000;
+    border: none;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 15px; /* Отступ от заголовка */
+    text-transform: uppercase;
+}
+
+    #back-button:hover {
+        opacity: 0.7;
+    }
+
+#current-category-title {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex-grow: 1; /* Чтобы заголовок занимал оставшееся место */
+    text-align: left;
+    border-bottom: none; /* Убираем нижнюю линию, она уже есть у .product-list-header */
+    padding-bottom: 0;
+}
+
+/* --- Категории (Grid, как у LoveCross) --- */
 #categories {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Адаптивная сетка */
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 40px;
 }
 
 .category-button {
-    padding: 15px;
-    font-size: 1.1em;
-    border: 1px solid #000000;
-    border-radius: 0;
+    padding: 12px 10px; /* Более компактные */
+    font-size: 0.9em;
+    border: 1px solid #000000; /* Черная рамка */
+    border-radius: 0; /* Острые углы */
     background-color: transparent;
     color: #000000;
     font-weight: 600;
-    transition: background-color 0.2s;
+    text-transform: uppercase; /* Верхний регистр */
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-    .category-button:active, .category-button:hover {
+    .category-button:hover {
         background-color: #000000;
         color: #ffffff;
     }
 
-
-/* --- Product Cards (Минимализм) --- */
+/* --- Список товаров (Сетка в две колонки на десктопе, одна на мобильных) --- */
 #product-items-container {
     display: grid;
-    grid-template-columns: 1fr; /* Можно использовать 1 колонку или 2 */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Две колонки на десктопе */
+    gap: 25px; /* Увеличенный отступ */
 }
 
+@media (max-width: 768px) {
+    #product-items-container {
+        grid-template-columns: 1fr; /* Одна колонка на мобильных */
+    }
+
+    main {
+        padding: 15px; /* Меньше отступов на мобильных */
+    }
+
+    header {
+        padding: 15px;
+    }
+}
+
+/* --- Карточки товаров (Минимализм без рамок) --- */
 .product-item {
-    background-color: transparent;
+    background-color: #ffffff; /* Белый фон */
     padding: 0;
     border-radius: 0;
-    border: 1px solid #dddddd;
+    box-shadow: none; /* Убираем тени */
+    border: 1px solid #e0e0e0; /* Еле заметная тонкая рамка */
 }
 
     .product-item img {
+        width: 100%;
+        height: auto;
+        display: block; /* Убирает лишний пробел под картинкой */
         border-radius: 0;
-        margin-bottom: 0 !important;
+        border-bottom: 1px solid #e0e0e0; /* Разделитель под изображением */
     }
 
-    .product-item h3 {
-        margin: 10px 15px 5px 15px;
-        font-size: 1em;
+/* Внутренние отступы для текстового блока */
+.product-text-content {
+    padding: 15px 20px; /* Отступы для текста внутри карточки */
+}
+
+.product-item h3 {
+    margin: 0 0 5px 0; /* Отступы */
+    font-size: 1.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: left; /* Выравнивание по левому краю */
+}
+
+.product-item p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555555; /* Более мягкий цвет для описания */
+    text-align: left; /* Выравнивание по левому краю */
+}
+
+    .product-item p strong {
         font-weight: 700;
+        color: #000000;
     }
 
-    .product-item p {
-        margin: 5px 15px;
-        font-size: 0.9em;
-    }
+/* --- Акцент на цене (Более крупно и явно) --- */
+.product-item .price-display {
+    margin: 15px 0 0 0; /* Отступ сверху */
+    font-size: 1.4em; /* Очень крупная цена */
+    font-weight: 700;
+    color: #000000;
+    text-align: left; /* Выравнивание по левому краю */
+}
 
-        .product-item p:last-of-type {
-            margin: 10px 15px 15px 15px;
-            font-size: 1.1em;
-            font-weight: 700;
-            color: #000000;
-        }
-
-        .product-item p strong {
-            font-size: 1em;
-            font-weight: 900;
-            color: #000000;
-        }
-
-
-/* --- Кнопки --- */
+/* --- Кнопки (Под изображением) --- */
 .button-group {
     display: flex;
     gap: 0;
-    margin-top: 0;
-    border-top: 1px solid #dddddd;
+    margin-top: 20px; /* Отступ от цены */
+    border-top: 1px solid #e0e0e0; /* Разделитель сверху */
 }
 
     .button-group button {
@@ -152,58 +206,29 @@ h2 {
         border-radius: 0;
         font-size: 14px;
         font-weight: 700;
+        text-transform: uppercase;
         cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
     }
 
+/* Купить - Черная кнопка */
 .buy-button {
     background-color: #000000;
     color: #ffffff;
     border: none;
 }
 
+    .buy-button:hover {
+        background-color: #333333;
+    }
+
+/* Запросить фото - Белая с черной рамкой */
 .photo-button {
     background-color: transparent;
     color: #000000;
     border: 1px solid #000000;
-    border-left: none;
+    border-left: none; /* Убираем двойную границу */
 }
 
-/* --- Footer (Адаптивный) --- */
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f7f7f7;
-    color: #666666;
-    padding: 10px 10px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-    z-index: 100;
-    border-top: 1px solid #dddddd;
-}
-
-#advantages {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7em;
-    text-align: center;
-    gap: 5px;
-}
-
-    #advantages div {
-        flex: 1;
-        min-width: 0;
-        padding: 0 5px;
-    }
-
-    #advantages .icon {
-        display: block;
-        margin-bottom: 3px;
-        font-size: 1.1em;
-    }
-
-@media (max-width: 350px) {
-    #advantages {
-        font-size: 0.65em;
-    }
-}
+    .photo-button:hover {
+        background-
