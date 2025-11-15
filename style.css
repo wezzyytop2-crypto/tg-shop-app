@@ -105,7 +105,7 @@ h2 {
     padding-bottom: 0;
 }
 
-/* --- НОВЫЕ СТИЛИ: Кнопки фильтрации --- */
+/* --- СТИЛИ: Кнопки фильтрации --- */
 #filter-buttons {
     display: flex;
     gap: 10px;
@@ -207,13 +207,45 @@ h2 {
     border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
 }
 
-    .product-item img {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 0;
-        border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
-    }
+/* --- НОВЫЕ СТИЛИ: Контейнер изображения и оверлей --- */
+.product-image-container {
+    position: relative;
+    cursor: zoom-in; /* Указываем, что изображение кликабельно */
+}
+
+.product-order-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Полупрозрачное затемнение */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    pointer-events: none; /* Пропускаем клик на контейнер */
+}
+
+.order-label {
+    background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    padding: 8px 15px;
+    font-size: 1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 2px solid var(--tg-theme-text-color, #000000);
+}
+/* --- КОНЕЦ СТИЛЕЙ ОВЕРЛЕЯ --- */
+
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+}
 
 .product-text-content {
     padding: 15px 20px;
@@ -332,6 +364,99 @@ footer {
     color: var(--tg-theme-hint-color, #999999);
     margin: 0;
 }
+
+
+/* --- НОВЫЙ БЛОК: СТИЛИ ДЛЯ ГАЛЕРЕИ (МОДАЛЬНОЕ ОКНО) v=4.7 --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+    margin: 10% auto;
+    padding: 0;
+    width: 90%;
+    max-width: 700px;
+    position: relative;
+    background-color: transparent;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: zoom-in;
+}
+
+.close-button {
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    z-index: 1010;
+    cursor: pointer;
+    text-shadow: 0 0 5px #000;
+}
+
+/* Navigation Arrows */
+.prev-img, .next-img {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1005;
+}
+
+.next-img {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+    .prev-img:hover, .next-img:hover {
+        background-color: rgba(0,0,0,0.8);
+    }
+
+/* Thumbnails */
+.thumbnails {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.thumbnail-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin: 0 5px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    border: 2px solid transparent;
+}
+
+    .thumbnail-img.active {
+        opacity: 1;
+        border-color: #fff;
+    }
+/* --- КОНЕЦ НОВОГО БЛОКА --- */
+
 
 /* --- Media Queries --- */
 @media (max-width: 600px) {
