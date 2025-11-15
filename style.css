@@ -72,8 +72,6 @@ main {
     margin: 0 auto;
     font-weight: 400;
 }
-/* --- КОНЕЦ СТИЛЕЙ ЛОГОТИПА --- */
-
 
 /* Заголовок категории - стиль LoveCross */
 h2 {
@@ -83,7 +81,6 @@ h2 {
     font-size: 1.3em;
     font-weight: 700;
     text-transform: uppercase;
-    /* Уберем нижнюю линию, так как она уже есть у #store-info */
     border-bottom: none;
     padding-bottom: 0;
 }
@@ -107,6 +104,52 @@ h2 {
     border-bottom: none;
     padding-bottom: 0;
 }
+
+/* --- НОВЫЕ СТИЛИ: Кнопки фильтрации --- */
+#filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+    padding-bottom: 10px;
+}
+
+.filter-button {
+    padding: 8px 15px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid var(--tg-theme-hint-color, #999999);
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--tg-theme-hint-color, #555555);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .filter-button.active {
+        background-color: var(--tg-theme-text-color, #000000);
+        color: var(--tg-theme-bg-color, #ffffff);
+        border-color: var(--tg-theme-text-color, #000000);
+    }
+/* --- КОНЕЦ СТИЛЕЙ ФИЛЬТРАЦИИ --- */
+
+/* --- Стили для статуса IN STOCK/ORDER --- */
+.status-stock {
+    color: var(--tg-theme-text-color, #000000);
+    font-weight: 700;
+    font-size: 0.9em;
+    padding-left: 10px;
+}
+
+.status-order {
+    color: var(--tg-theme-hint-color, #888888);
+    font-weight: 400;
+    font-size: 0.9em;
+    padding-left: 10px;
+}
+/* --- Конец стилей статуса --- */
+
 
 /* --- Категории --- */
 #categories {
@@ -204,7 +247,7 @@ h2 {
     text-align: left;
 }
 
-/* --- Кнопки --- */
+/* --- Кнопки BUY/ORDER/PHOTOS --- */
 .button-group {
     display: flex;
     gap: 0;
@@ -251,7 +294,6 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
-    /* Используем flex для корректного отображения преимуществ */
     display: flex;
     flex-direction: column;
     background-color: var(--tg-theme-secondary-bg-color, #ffffff);
@@ -304,7 +346,7 @@ footer {
     main {
         padding: 10px;
     }
-    /* Стили для маленьких экранов */
+
     #store-logo {
         width: 60px;
         height: 60px;
