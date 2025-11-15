@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=4.8 - Исправлена галерея и структура данных)
+﻿// app.js (Режим: Telegram Mini App v=4.9 - Исправлена инверсия кнопок)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null;
@@ -37,12 +37,11 @@ function roundToNearestTen(price) {
 
 
 // --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
-// ВНИМАНИЕ: Поле 'image' ИСПРАВЛЕНО на 'images' (МАССИВ СТРОК)
+// ВНИМАНИЕ: Поле 'images' должно быть МАССИВОМ
 const products = {
 
     hoodies_sweats: [
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Под заказ. Бежевое худи.", images: ["images/essentails.png"], status: "ORDER" },
-        // Пример с двумя фотографиями для демонстрации галереи:
         { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"], status: "IN STOCK" },
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Под заказ. Серое зип-худи.", images: ["images/zip-hoodie_burberry.jpg"], status: "ORDER" }
     ],
@@ -56,7 +55,6 @@ const products = {
     accessories: [
         { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Под заказ. Металлический цвет.", images: ["images/bag_supreme_silver.png"], status: "ORDER" },
         { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Под заказ. Черный, с белым лого.", images: ["images/bag_supreme_black.png"], status: "ORDER" },
-        // ИСПРАВЛЕН ПУТЬ:
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Черный ремень, черная пряжка.", images: ["images/belt_black.png"], status: "ORDER" },
         { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Бежевый ремень, золотая пряжка.", images: ["images/glasses_black.png"], status: "ORDER" },
         { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Под заказ. Маленькая сумка-мессенджер.", images: ["images/mini_bag_lacoste_black.png"], status: "ORDER" },
@@ -66,24 +64,18 @@ const products = {
 };
 
 
-// --- 3. Функционал: Отображение товаров (Только переключение вида) ---
+// --- 3. Функционал: Отображение товаров ---
 
 function showCategory(categoryKey, categoryName) {
     currentCategoryKey = categoryKey;
-
     document.title = `U L A N S _ S T O R E — ${categoryName}`;
-
     document.getElementById('category-view').style.display = 'none';
     document.getElementById('product-list').style.display = 'block';
-
     document.getElementById('current-category-title').textContent = categoryName.toUpperCase();
     document.querySelector('footer').style.display = 'none';
-
     document.getElementById('filter-all').classList.add('active');
     document.getElementById('filter-stock').classList.remove('active');
-
     filterProducts(categoryKey, 'all');
-
     tg.MainButton.setText("← BACK TO CATEGORIES");
     tg.MainButton.show();
 }
@@ -104,12 +96,11 @@ function filterProducts(categoryKey, filterType) {
         document.getElementById('filter-all').classList.add('active');
         document.getElementById('filter-stock').classList.remove('active');
     }
-
     renderProducts(filteredProducts);
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (ИСПРАВЛЕНА) ---
+// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ ---
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -129,7 +120,6 @@ function renderProducts(productsToRender) {
         const item = document.createElement('div');
         item.className = 'product-item';
 
-        // ИСПРАВЛЕНО: Используем product.images[0] (массив) вместо product.image (строка)
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
         const roundedPmrPrice = roundToNearestTen(product.price);
@@ -144,7 +134,6 @@ function renderProducts(productsToRender) {
 
         let imageHtml = '';
         if (imageUrl) {
-            // Передаем ID в кавычках, чтобы JS корректно обработал JSON
             imageHtml = `
                 <div class="product-image-container" onclick='openGallery("${currentCategoryKey}", ${product.id})'>
                     <img src="${imageUrl}" alt="${product.name}">
@@ -157,7 +146,7 @@ function renderProducts(productsToRender) {
             `;
         }
 
-        // УЛУЧШЕНИЕ (Пункт 4): Добавляем класс 'order-button' к кнопке BUY, если товара нет в наличии
+        // Добавляем класс 'order-button' к кнопке BUY, если товара нет в наличии
         const buyButtonClass = isOrder ? 'buy-button order-button' : 'buy-button';
 
         item.innerHTML = `
@@ -213,14 +202,10 @@ tg.MainButton.onClick(goBack);
 
 function goBack() {
     currentCategoryKey = null;
-
     document.getElementById('category-view').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
-
     document.title = 'U L A N S _ S T O R E | Fashion Store';
-
     document.querySelector('footer').style.display = 'flex';
-
     tg.MainButton.hide();
 }
 
@@ -231,26 +216,18 @@ function goHome() {
 
 
 // --- 10. ФУНКЦИОНАЛ: ГАЛЕРЕЯ ---
-
 function openGallery(productKey, productId) {
-    // 1. Находим товар по ID
     const category = products[productKey];
     const product = category.find(p => p.id === productId);
 
-    // ИСПРАВЛЕНО: Проверяем 'images' (массив), а не 'image' (строка)
     if (!product || !product.images || product.images.length === 0) {
         console.error("Gallery Error: Product or images not found.");
         return;
     }
 
-    // 2. Устанавливаем глобальное состояние галереи
     currentGalleryImages = product.images;
     currentImageIndex = 0;
-
-    // 3. Рендерим галерею
     renderGallery();
-
-    // 4. Показываем модальное окно
     document.getElementById('gallery-modal').style.display = 'block';
 }
 
@@ -268,7 +245,7 @@ function renderGallery() {
     const isSingleImage = currentGalleryImages.length <= 1;
     prevBtn.style.display = isSingleImage ? 'none' : 'block';
     nextBtn.style.display = isSingleImage ? 'none' : 'block';
-    thumbnailsContainer.style.display = isSingleImage ? 'none' : 'flex'; // Используем flex для центрирования
+    thumbnailsContainer.style.display = isSingleImage ? 'none' : 'flex';
 
     mainImg.src = baseUrl + currentGalleryImages[currentImageIndex];
 
@@ -306,4 +283,3 @@ function prevImage(event) {
     currentImageIndex = (currentImageIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
     renderGallery();
 }
-// --- КОНЕЦ НОВОГО БЛОКА ---

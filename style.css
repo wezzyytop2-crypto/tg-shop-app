@@ -292,34 +292,35 @@ h2 {
         transition: background-color 0.2s, color 0.2s;
     }
 
-/* Кнопка "BUY" (Черная) */
+/* ИСПРАВЛЕНИЕ: Кнопка "BUY" (Прозрачная, как на скриншоте) */
 .buy-button {
-    background-color: var(--tg-theme-text-color, #000000);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
+    background-color: transparent;
+    color: var(--tg-theme-text-color, #000000);
+    border: 1px solid var(--tg-theme-text-color, #000000);
 }
 
     .buy-button:hover {
-        background-color: var(--tg-theme-hint-color, #333333);
-    }
-
-/* Кнопка "PHOTO" (Прозрачная) */
-.photo-button {
-    background-color: transparent;
-    color: var(--tg-theme-text-color, #000000);
-    border: 1px solid var(--tg-theme-text-color, #000000);
-    border-left: none;
-}
-
-    .photo-button:hover {
         background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     }
 
-/* УЛУЧШЕНИЕ (Пункт 4): Стиль кнопки "BUY" для товара "ПОД ЗАКАЗ" */
+/* ИСПРАВЛЕНИЕ: Кнопка "PHOTO" (Черная, как на скриншоте) */
+.photo-button {
+    background-color: var(--tg-theme-text-color, #000000);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    border-left: 1px solid var(--tg-theme-text-color, #000000);
+}
+
+    .photo-button:hover {
+        background-color: var(--tg-theme-hint-color, #333333);
+    }
+
+/* ИСПРАВЛЕНИЕ: Стиль кнопки "BUY" для товара "ПОД ЗАКАЗ" (Серая, неактивная) */
 .buy-button.order-button {
     background-color: transparent;
-    color: var(--tg-theme-text-color, #000000);
-    border: 1px solid var(--tg-theme-text-color, #000000);
+    color: var(--tg-theme-hint-color, #999999);
+    border: 1px solid var(--tg-theme-hint-color, #999999);
+    border-right: none; /* Убираем двойную границу с photo-button */
 }
 
 
@@ -441,7 +442,7 @@ footer {
 .thumbnails {
     text-align: center;
     padding: 10px 0;
-    display: flex; /* Улучшено для центрирования */
+    display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
