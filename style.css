@@ -3,7 +3,6 @@ body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    /* Используем TWA переменные для адаптивности к светлой/темной теме */
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
     line-height: 1.6;
@@ -44,7 +43,6 @@ header {
 /* --- Main Content --- */
 main {
     padding: 25px;
-    /* Добавляем отступ для Главной Кнопки TWA, чтобы контент не перекрывался */
     padding-bottom: 100px;
 }
 
@@ -59,7 +57,7 @@ main {
 #store-logo {
     width: 70px;
     height: 70px;
-    border-radius: 50%; /* Круглая форма */
+    border-radius: 50%;
     object-fit: cover;
     margin-bottom: 15px;
     border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
@@ -73,7 +71,7 @@ main {
     font-weight: 400;
 }
 
-/* Заголовок категории - стиль LoveCross */
+/* Заголовок категории */
 h2 {
     color: var(--tg-theme-text-color, #000000);
     text-align: left;
@@ -132,7 +130,6 @@ h2 {
         color: var(--tg-theme-bg-color, #ffffff);
         border-color: var(--tg-theme-text-color, #000000);
     }
-/* --- КОНЕЦ СТИЛЕЙ ФИЛЬТРАЦИИ --- */
 
 /* --- Стили для статуса IN STOCK/ORDER --- */
 .status-stock {
@@ -148,8 +145,6 @@ h2 {
     font-size: 0.9em;
     padding-left: 10px;
 }
-/* --- Конец стилей статуса --- */
-
 
 /* --- Категории --- */
 #categories {
@@ -207,10 +202,10 @@ h2 {
     border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
 }
 
-/* --- НОВЫЕ СТИЛИ: Контейнер изображения и оверлей --- */
+/* --- Контейнер изображения и оверлей --- */
 .product-image-container {
     position: relative;
-    cursor: zoom-in; /* Указываем, что изображение кликабельно */
+    cursor: zoom-in;
 }
 
 .product-order-overlay {
@@ -219,12 +214,12 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Полупрозрачное затемнение */
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 5;
-    pointer-events: none; /* Пропускаем клик на контейнер */
+    pointer-events: none;
 }
 
 .order-label {
@@ -236,7 +231,6 @@ h2 {
     text-transform: uppercase;
     border: 2px solid var(--tg-theme-text-color, #000000);
 }
-/* --- КОНЕЦ СТИЛЕЙ ОВЕРЛЕЯ --- */
 
 
 .product-item img {
@@ -298,6 +292,7 @@ h2 {
         transition: background-color 0.2s, color 0.2s;
     }
 
+/* Кнопка "BUY" (Черная) */
 .buy-button {
     background-color: var(--tg-theme-text-color, #000000);
     color: var(--tg-theme-button-text-color, #ffffff);
@@ -308,6 +303,7 @@ h2 {
         background-color: var(--tg-theme-hint-color, #333333);
     }
 
+/* Кнопка "PHOTO" (Прозрачная) */
 .photo-button {
     background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
@@ -318,6 +314,13 @@ h2 {
     .photo-button:hover {
         background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     }
+
+/* УЛУЧШЕНИЕ (Пункт 4): Стиль кнопки "BUY" для товара "ПОД ЗАКАЗ" */
+.buy-button.order-button {
+    background-color: transparent;
+    color: var(--tg-theme-text-color, #000000);
+    border: 1px solid var(--tg-theme-text-color, #000000);
+}
 
 
 /* --- Footer (Фиксированная позиция для TWA) --- */
@@ -366,7 +369,7 @@ footer {
 }
 
 
-/* --- НОВЫЙ БЛОК: СТИЛИ ДЛЯ ГАЛЕРЕИ (МОДАЛЬНОЕ ОКНО) v=4.7 --- */
+/* --- СТИЛИ ДЛЯ ГАЛЕРЕИ (МОДАЛЬНОЕ ОКНО) --- */
 .modal {
     display: none;
     position: fixed;
@@ -434,10 +437,13 @@ footer {
         background-color: rgba(0,0,0,0.8);
     }
 
-/* Thumbnails */
+/* Thumbnails (Превью) */
 .thumbnails {
     text-align: center;
     padding: 10px 0;
+    display: flex; /* Улучшено для центрирования */
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .thumbnail-img {
@@ -455,8 +461,6 @@ footer {
         opacity: 1;
         border-color: #fff;
     }
-/* --- КОНЕЦ НОВОГО БЛОКА --- */
-
 
 /* --- Media Queries --- */
 @media (max-width: 600px) {

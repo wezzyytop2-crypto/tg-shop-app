@@ -1,10 +1,7 @@
-﻿// app.js (Режим: Telegram Mini App v=4.7 - Галерея + Визуальное выделение "Под заказ")
+﻿// app.js (Режим: Telegram Mini App v=4.8 - Исправлена галерея и структура данных)
 
 // --- Глобальные переменные состояния ---
-let currentCategoryKey = null; // Хранит ключ текущей категории для фильтрации
-// ---------------------------------------
-
-// --- Глобальные переменные для галереи (НОВЫЕ) ---
+let currentCategoryKey = null;
 let currentGalleryImages = [];
 let currentImageIndex = 0;
 // -------------------------------------------------
@@ -19,7 +16,6 @@ const mainColor = '#404040';
 // Цвет текста кнопки на БЕЛЫЙ
 const buttonTextColor = '#ffffff';
 
-// Используем цвета темы Telegram для шапки и фона
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
 
 tg.setHeaderColor(headerColor);
@@ -41,13 +37,13 @@ function roundToNearestTen(price) {
 
 
 // --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
-// ВНИМАНИЕ: Поле 'image' заменено на 'images' (МАССИВ СТРОК)
+// ВНИМАНИЕ: Поле 'image' ИСПРАВЛЕНО на 'images' (МАССИВ СТРОК)
 const products = {
 
     hoodies_sweats: [
         { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Под заказ. Бежевое худи.", images: ["images/essentails.png"], status: "ORDER" },
         // Пример с двумя фотографиями для демонстрации галереи:
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png", "images/zip-hoofie_ralph_detail.png"], status: "IN STOCK" },
+        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"], status: "IN STOCK" },
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Под заказ. Серое зип-худи.", images: ["images/zip-hoodie_burberry.jpg"], status: "ORDER" }
     ],
     t_shirts: [
@@ -60,7 +56,7 @@ const products = {
     accessories: [
         { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Под заказ. Металлический цвет.", images: ["images/bag_supreme_silver.png"], status: "ORDER" },
         { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Под заказ. Черный, с белым лого.", images: ["images/bag_supreme_black.png"], status: "ORDER" },
-        // Исправлен путь к изображению
+        // ИСПРАВЛЕН ПУТЬ:
         { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Черный ремень, черная пряжка.", images: ["images/belt_black.png"], status: "ORDER" },
         { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Бежевый ремень, золотая пряжка.", images: ["images/glasses_black.png"], status: "ORDER" },
         { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Под заказ. Маленькая сумка-мессенджер.", images: ["images/mini_bag_lacoste_black.png"], status: "ORDER" },
@@ -83,14 +79,11 @@ function showCategory(categoryKey, categoryName) {
     document.getElementById('current-category-title').textContent = categoryName.toUpperCase();
     document.querySelector('footer').style.display = 'none';
 
-    // Активируем фильтр "ВСЕ ТОВАРЫ" по умолчанию
     document.getElementById('filter-all').classList.add('active');
     document.getElementById('filter-stock').classList.remove('active');
 
-    // Показываем все товары при входе в категорию
     filterProducts(categoryKey, 'all');
 
-    // Включаем TWA MainButton для навигации "Назад"
     tg.MainButton.setText("← BACK TO CATEGORIES");
     tg.MainButton.show();
 }
@@ -116,7 +109,7 @@ function filterProducts(categoryKey, filterType) {
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (ОБНОВЛЕНА ДЛЯ ГАЛЕРЕИ И ОВЕРЛЕЯ) ---
+// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (ИСПРАВЛЕНА) ---
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -136,7 +129,7 @@ function renderProducts(productsToRender) {
         const item = document.createElement('div');
         item.className = 'product-item';
 
-        // Используем первое изображение из массива для превью
+        // ИСПРАВЛЕНО: Используем product.images[0] (массив) вместо product.image (строка)
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
         const roundedPmrPrice = roundToNearestTen(product.price);
@@ -149,11 +142,11 @@ function renderProducts(productsToRender) {
                            '<span class="status-order">ПОД ЗАКАЗ</span>' :
                            '<span class="status-stock">В НАЛИЧИИ</span>';
 
-        // Создание контейнера для изображения с обработчиком клика и оверлеем
         let imageHtml = '';
         if (imageUrl) {
+            // Передаем ID в кавычках, чтобы JS корректно обработал JSON
             imageHtml = `
-                <div class="product-image-container" onclick="openGallery('${currentCategoryKey}', ${product.id})">
+                <div class="product-image-container" onclick='openGallery("${currentCategoryKey}", ${product.id})'>
                     <img src="${imageUrl}" alt="${product.name}">
                     ${isOrder ? `
                         <div class="product-order-overlay">
@@ -163,6 +156,9 @@ function renderProducts(productsToRender) {
                 </div>
             `;
         }
+
+        // УЛУЧШЕНИЕ (Пункт 4): Добавляем класс 'order-button' к кнопке BUY, если товара нет в наличии
+        const buyButtonClass = isOrder ? 'buy-button order-button' : 'buy-button';
 
         item.innerHTML = `
             ${imageHtml}
@@ -175,7 +171,7 @@ function renderProducts(productsToRender) {
                 <p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>
 
                 <div class="button-group">
-                    <button class="buy-button" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
+                    <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
                     <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">REQUEST PHOTOS</button>
                 </div>
             </div>
@@ -234,14 +230,18 @@ function goHome() {
 }
 
 
-// --- 10. ФУНКЦИОНАЛ: ГАЛЕРЕЯ (НОВЫЙ БЛОК) ---
+// --- 10. ФУНКЦИОНАЛ: ГАЛЕРЕЯ ---
 
 function openGallery(productKey, productId) {
     // 1. Находим товар по ID
     const category = products[productKey];
     const product = category.find(p => p.id === productId);
 
-    if (!product || !product.images || product.images.length === 0) return;
+    // ИСПРАВЛЕНО: Проверяем 'images' (массив), а не 'image' (строка)
+    if (!product || !product.images || product.images.length === 0) {
+        console.error("Gallery Error: Product or images not found.");
+        return;
+    }
 
     // 2. Устанавливаем глобальное состояние галереи
     currentGalleryImages = product.images;
@@ -263,18 +263,15 @@ function renderGallery() {
     const thumbnailsContainer = document.getElementById('gallery-thumbnails');
     const baseUrl = "https://wezzyytop2-crypto.github.io/tg-shop-app/";
 
-    // Скрываем навигацию, если фото одно
     const prevBtn = document.querySelector('.prev-img');
     const nextBtn = document.querySelector('.next-img');
     const isSingleImage = currentGalleryImages.length <= 1;
     prevBtn.style.display = isSingleImage ? 'none' : 'block';
     nextBtn.style.display = isSingleImage ? 'none' : 'block';
-    thumbnailsContainer.style.display = isSingleImage ? 'none' : 'block';
+    thumbnailsContainer.style.display = isSingleImage ? 'none' : 'flex'; // Используем flex для центрирования
 
-    // 1. Устанавливаем основное изображение
     mainImg.src = baseUrl + currentGalleryImages[currentImageIndex];
 
-    // 2. Рендерим превью (только если их > 1)
     thumbnailsContainer.innerHTML = '';
     if (!isSingleImage) {
         currentGalleryImages.forEach((imagePath, index) => {
