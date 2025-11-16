@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=5.4 - Авторасчет oldPrice по проценту. Скидка ТОЛЬКО на ZIP-ХУДИ)
+﻿// app.js (Режим: Telegram Mini App v=5.5 - Скидка рассчитывается ОТ basePrice. Дизайн - СЕТКА)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null;
@@ -32,11 +32,12 @@ const PMR_TO_MDL_RATE = 1 / 0.94;
 
 // --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ---
 function roundToNearestTen(price) {
+    // Округляет цену до ближайшего десятка
     return Math.round(price / 10) * 10;
 }
 
 
-// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
+// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР). Параметры в столбик для удобства ---
 const products = {
 
     hoodies_sweats: [
@@ -55,33 +56,105 @@ const products = {
         {
             id: 102,
             name: "Zip-худи 'Polo Ralph Lauren'",
-            price: 550,
-            discountPercent: 20, // <-- Указываем 20%
+            basePrice: 550,          // <-- СТАРАЯ ЦЕНА (Базовая)
+            discountPercent: 20,     // <-- Скидка 20%
             size: "L (M)",
             description: "В наличии. Черное зип-худи. СКИДКА -20%!",
             images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"],
             status: "IN STOCK",
-            isSale: true // Обязательный флаг
+            isSale: true // Флаг для включения логики скидки
         },
 
         // 3. СЕРОЕ ХУДИ (ID 103): БЕЗ СКИДКИ
-        { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Под заказ. Серое зип-худи.", images: ["images/zip-hoodie_burberry.jpg"], status: "ORDER" }
+        {
+            id: 103,
+            name: "Zip-худи 'Burberry'",
+            price: 625,
+            size: "XL",
+            description: "Под заказ. Серое зип-худи.",
+            images: ["images/zip-hoodie_burberry.jpg"],
+            status: "ORDER"
+        }
     ],
     t_shirts: [
-        { id: 401, name: "Футболка 'Bape' (Black)", price: 375, size: "L", description: "Под заказ. Чёрная футболка Bape.", images: ["images/bape.png"], status: "ORDER" },
+        {
+            id: 401,
+            name: "Футболка 'Bape' (Black)",
+            price: 375,
+            size: "L",
+            description: "Под заказ. Чёрная футболка Bape.",
+            images: ["images/bape.png"],
+            status: "ORDER"
+        },
     ],
 
     jackets: [],
     sneakers: [],
 
     accessories: [
-        { id: 501, name: "Рюкзак 'Supreme' (Серебро)", price: 425, size: "OS", description: "Под заказ. Металлический цвет.", images: ["images/bag_supreme_silver.png"], status: "ORDER" },
-        { id: 502, name: "Рюкзак 'Supreme' (Черный)", price: 400, size: "OS", description: "Под заказ. Черный, с белым лого.", images: ["images/bag_supreme_black.png"], status: "ORDER" },
-        { id: 503, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Черный ремень, черная пряжка.", images: ["images/belt_black.png"], status: "ORDER" },
-        { id: 504, name: "Ремень 'Gucci'", price: 225, size: "110cm", description: "Под заказ. Бежевый ремень, золотая пряжка.", images: ["images/glasses_black.png"], status: "ORDER" },
-        { id: 505, name: "Сумка 'Lacoste'", price: 425, size: "OS", description: "Под заказ. Маленькая сумка-мессенджер.", images: ["images/mini_bag_lacoste_black.png"], status: "ORDER" },
-        { id: 506, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Под заказ. Черная оправа.", images: ["images/glasses_black.png"], status: "ORDER" },
-        { id: 507, name: "Очки 'Chrome Hearts'", price: 175, size: "OS", description: "Под заказ. Прозрачная оправа.", images: ["images/glasses_white.png"], status: "ORDER" }
+        {
+            id: 501,
+            name: "Рюкзак 'Supreme' (Серебро)",
+            price: 425,
+            size: "OS",
+            description: "Под заказ. Металлический цвет.",
+            images: ["images/bag_supreme_silver.png"],
+            status: "ORDER"
+        },
+        {
+            id: 502,
+            name: "Рюкзак 'Supreme' (Черный)",
+            price: 400,
+            size: "OS",
+            description: "Под заказ. Черный, с белым лого.",
+            images: ["images/bag_supreme_black.png"],
+            status: "ORDER"
+        },
+        {
+            id: 503,
+            name: "Ремень 'Gucci'",
+            price: 225,
+            size: "110cm",
+            description: "Под заказ. Черный ремень, черная пряжка.",
+            images: ["images/belt_black.png"],
+            status: "ORDER"
+        },
+        {
+            id: 504,
+            name: "Ремень 'Gucci'",
+            price: 225,
+            size: "110cm",
+            description: "Под заказ. Бежевый ремень, золотая пряжка.",
+            images: ["images/glasses_black.png"],
+            status: "ORDER"
+        },
+        {
+            id: 505,
+            name: "Сумка 'Lacoste'",
+            price: 425,
+            size: "OS",
+            description: "Под заказ. Маленькая сумка-мессенджер.",
+            images: ["images/mini_bag_lacoste_black.png"],
+            status: "ORDER"
+        },
+        {
+            id: 506,
+            name: "Очки 'Chrome Hearts'",
+            price: 175,
+            size: "OS",
+            description: "Под заказ. Черная оправа.",
+            images: ["images/glasses_black.png"],
+            status: "ORDER"
+        },
+        {
+            id: 507,
+            name: "Очки 'Chrome Hearts'",
+            price: 175,
+            size: "OS",
+            description: "Под заказ. Прозрачная оправа.",
+            images: ["images/glasses_white.png"],
+            status: "ORDER"
+        }
     ]
 };
 
@@ -90,7 +163,7 @@ const products = {
 
 function showCategory(categoryKey, categoryName) {
     currentCategoryKey = categoryKey;
-    document.title = `U L A N S _ S T O R E — ${categoryName}`;
+    document.title = `U L A N S _ СТОР — ${categoryName}`;
     document.getElementById('category-view').style.display = 'none';
     document.getElementById('product-list').style.display = 'block';
     document.getElementById('current-category-title').textContent = categoryName.toUpperCase();
@@ -98,7 +171,7 @@ function showCategory(categoryKey, categoryName) {
     document.getElementById('filter-all').classList.add('active');
     document.getElementById('filter-stock').classList.remove('active');
     filterProducts(categoryKey, 'all');
-    tg.MainButton.setText("← BACK TO CATEGORIES");
+    tg.MainButton.setText("← НАЗАД К КАТЕГОРИЯМ");
     tg.MainButton.show();
 }
 
@@ -122,7 +195,7 @@ function filterProducts(categoryKey, filterType) {
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для работы с discountPercent) ---
+// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для работы с basePrice) ---
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -145,35 +218,43 @@ function renderProducts(productsToRender) {
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
         const isOrder = product.status !== 'IN STOCK';
-        // Проверка на скидку: isSale: true ИЛИ есть discountPercent > 0
-        const isSale = product.isSale === true || (product.discountPercent && product.discountPercent > 0);
+        // Проверка на скидку: isSale: true И есть basePrice, discountPercent
+        const isSale = product.isSale === true && product.basePrice && product.discountPercent > 0;
 
-        const roundedPmrPrice = roundToNearestTen(product.price);
-        const rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
-        const roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
         const statusText = isOrder ?
                            '<span class="status-order">ПОД ЗАКАЗ</span>' :
                            '<span class="status-stock">В НАЛИЧИИ</span>';
 
-        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ (ОБНОВЛЕНА ДЛЯ discountPercent) ---
+        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ ---
         let priceDisplayHtml = '';
         let saleBadgeHtml = '';
 
-        if (isSale && product.discountPercent && product.discountPercent > 0) {
+        let actualPrice; // Фактическая (новая) цена
+        let roundedPmrPrice;
+        let rawMdlPrice;
+        let roundedMdlPrice;
+
+        if (isSale) {
+            const basePrice = product.basePrice;
             const discount = product.discountPercent;
 
-            // Расчет старой цены (oldPrice) на основе новой цены и процента
-            const oldPriceRaw = product.price / (1 - (discount / 100));
-            const roundedOldPmrPrice = roundToNearestTen(oldPriceRaw); // Округляем для вывода
+            // 1. Расчет НОВОЙ ЦЕНЫ: Actual Price = Base Price * (1 - Discount / 100)
+            actualPrice = basePrice * (1 - (discount / 100));
 
-            // Формируем текст ярлыка
+            // 2. Округление и конвертация для отображения
+            roundedPmrPrice = roundToNearestTen(actualPrice);
+            rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
+            roundedMdlPrice = roundToNearestTen(rawMdlPrice);
+
+            // Старая цена для отображения
+            const roundedOldPmrPrice = roundToNearestTen(basePrice);
+
+            // Формируем ярлык и HTML
             const badgeText = `-${discount}%`;
-
             const rawOldMdlPrice = roundedOldPmrPrice * PMR_TO_MDL_RATE;
             const roundedOldMdlPrice = roundToNearestTen(rawOldMdlPrice);
 
-            // Используем рассчитанный текст в ярлыке
             saleBadgeHtml = `<div class="product-badge sale-badge">${badgeText}</div>`;
 
             priceDisplayHtml = `
@@ -182,10 +263,21 @@ function renderProducts(productsToRender) {
                     <strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL
                 </p>
             `;
+
+            // --- Если товар без скидки, используем стандартную логику (price) ---
         } else {
+            actualPrice = product.price || 0; // Используем 'price'
+            roundedPmrPrice = roundToNearestTen(actualPrice);
+            rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
+            roundedMdlPrice = roundToNearestTen(rawMdlPrice);
+
             priceDisplayHtml = `<p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>`;
         }
         // ------------------------------------------
+
+        // Для кнопки "Купить" используем фактическую цену, которая была рассчитана (roundedPmrPrice)
+        const buyButtonPrice = roundedPmrPrice;
+
 
         let imageHtml = '';
         if (imageUrl) {
@@ -214,8 +306,8 @@ function renderProducts(productsToRender) {
                 ${priceDisplayHtml}
 
                 <div class="button-group">
-                    <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
-                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">REQUEST PHOTOS</button>
+                    <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${buyButtonPrice})">КУПИТЬ / ЗАКАЗАТЬ</button>
+                    <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">ЗАПРОСИТЬ ФОТО</button>
                 </div>
             </div>
         `;
@@ -227,6 +319,7 @@ function renderProducts(productsToRender) {
 // --- 6. Функционал: Обработка действия "Купить" ---
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
+    // В сообщении указываем рассчитанную цену (price)
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
@@ -258,7 +351,7 @@ function goBack() {
     currentCategoryKey = null;
     document.getElementById('category-view').style.display = 'block';
     document.getElementById('product-list').style.display = 'none';
-    document.title = 'U L A N S _ S T O R E | Fashion Store';
+    document.title = 'U L A N S _ СТОР | Fashion Store';
     document.querySelector('footer').style.display = 'flex';
     tg.MainButton.hide();
 }
