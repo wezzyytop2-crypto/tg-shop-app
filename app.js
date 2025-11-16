@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=4.9 - Исправлена инверсия кнопок)
+﻿// app.js (Режим: Telegram Mini App v=5.0 - Исправление кнопок для тем)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null;
@@ -37,7 +37,6 @@ function roundToNearestTen(price) {
 
 
 // --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
-// ВНИМАНИЕ: Поле 'images' должно быть МАССИВОМ
 const products = {
 
     hoodies_sweats: [
@@ -146,7 +145,6 @@ function renderProducts(productsToRender) {
             `;
         }
 
-        // Добавляем класс 'order-button' к кнопке BUY, если товара нет в наличии
         const buyButtonClass = isOrder ? 'buy-button order-button' : 'buy-button';
 
         item.innerHTML = `
