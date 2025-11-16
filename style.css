@@ -330,12 +330,12 @@ h2 {
         transition: background-color 0.2s, color 0.2s;
     }
 
-/* ИСПРАВЛЕНО: Кнопка "КУПИТЬ/ЗАКАЗАТЬ" - Белый фон, Черный текст (Как на вашем скриншоте) */
+/* ИСПРАВЛЕНО: Кнопка "КУПИТЬ/ЗАКАЗАТЬ" - Белый фон, Черный текст */
 .buy-button {
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
     border: 1px solid var(--tg-theme-text-color, #000000);
-    border-right: none; /* Убираем, чтобы был один разделитель */
+    border-right: none;
 }
 
     .buy-button:hover {

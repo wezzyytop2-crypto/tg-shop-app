@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=6.0 - Исправлен баг открытия категорий + Фильтры NEW/SALE)
+﻿// app.js (Режим: Telegram Mini App v=6.1 - Окончательно исправленный код)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null; 
@@ -71,7 +71,7 @@ const products = {
             discountPercent: 20,     
             size: "L (M)", 
             description: "В наличии. Черное зип-худи. СКИДКА -20%!", 
-            images: ["images/zip-hoofie_ralph.png"], 
+            images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"], 
             status: "IN STOCK", 
             isSale: true,
             isNew: false, 
@@ -190,7 +190,7 @@ const products = {
 };
 
 
-// --- 3. ФУНКЦИЯ: ФИЛЬТРАЦИЯ ТОВАРОВ (ИСПРАВЛЕНО: Теперь открывает категорию) ---
+// --- 3. ФУНКЦИЯ: ФИЛЬТРАЦИЯ ТОВАРОВ (Теперь открывает категорию и фильтрует) ---
 
 function filterProducts(categoryKey, filterType, categoryName = null) {
     
@@ -205,7 +205,6 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
     // 3. Устанавливаем заголовок (только если он передан)
     if (categoryName) {
         document.getElementById('current-category-title').textContent = categoryName.toUpperCase();
-        // ИСПРАВЛЕНО: Английский S T O R E
         document.title = `U L A N S _ S T O R E — ${categoryName}`;
     }
 
@@ -387,7 +386,6 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         currentCategoryKey = null;
         document.getElementById('category-view').style.display = 'block';
         document.getElementById('product-list').style.display = 'none';
-        // ИСПРАВЛЕНО: Английский S T O R E
         document.title = 'U L A N S _ S T O R E | Fashion Store';
         document.querySelector('footer').style.display = 'flex';
         tg.MainButton.hide();
@@ -466,4 +464,4 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         if (event) event.stopPropagation();
         currentImageIndex = (currentImageIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
         renderGallery();
-    }}
+    }
