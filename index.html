@@ -3,75 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U L A N S _ S T O R E | Fashion Store</title>
-
+    <title>U L A N S _ СТОР | Fashion Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css?v=5.2">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <div id="shop-header">
-            <a href="#" onclick="goHome()" class="header-title-link">
-                <h1>U L A N S _ S T O R E</h1>
-            </a>
-        </div>
-    </header>
+    <div id="category-view" class="view">
+        <header>
+            <h1>U L A N S _ СТОР</h1>
+            <p>Ваш стиль начинается здесь. Оригинальное качество и быстрая доставка.</p>
+        </header>
 
-    <main>
-        <div id="category-view">
-            <div id="store-info">
-                <img id="store-logo" src="images/logo.jpg" alt="Логотип магазина">
-                <p class="store-description">Ваш магазин премиальной одежды и аксессуаров. Лучшие цены и быстрая доставка по ПМР/МДЛ. Выберите категорию, чтобы начать.</p>
+        <div class="category-grid">
+            <div class="category-item" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">
+                <img src="images/hoodie_category.png" alt="Худи и Свитшоты">
+                <span>ХУДИ & СВИТШОТЫ</span>
             </div>
-            <h2>Categories</h2>
-            <div id="categories">
-                <button class="category-button" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">HOODIES</button>
-                <button class="category-button" onclick="showCategory('t_shirts', 'Футболки')">T-SHIRTS</button>
-                <button class="category-button" onclick="showCategory('jackets', 'Куртки')">JACKETS</button>
-                <button class="category-button" onclick="showCategory('sneakers', 'Обувь')">SNEAKERS</button>
-                <button class="category-button" onclick="showCategory('accessories', 'Аксессуары')">ACCESSORIES</button>
+            <div class="category-item" onclick="showCategory('t_shirts', 'Футболки')">
+                <img src="images/tshirt_category.png" alt="Футболки">
+                <span>ФУТБОЛКИ</span>
             </div>
-        </div>
-
-        <div id="product-list" style="display:none;">
-            <div class="product-list-header">
-                <h2 id="current-category-title"></h2>
+            <div class="category-item" onclick="showCategory('jackets', 'Куртки')">
+                <img src="images/jacket_category.png" alt="Куртки">
+                <span>КУРТКИ</span>
             </div>
-
-            <div id="filter-buttons">
-                <button id="filter-all" class="filter-button active" onclick="filterProducts(currentCategoryKey, 'all')">ВСЕ ТОВАРЫ</button>
-                <button id="filter-stock" class="filter-button" onclick="filterProducts(currentCategoryKey, 'stock')">IN STOCK</button>
+            <div class="category-item" onclick="showCategory('sneakers', 'Обувь')">
+                <img src="images/shoes_category.png" alt="Обувь">
+                <span>ОБУВЬ</span>
             </div>
-            <div id="product-items-container">
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div id="advantages">
-            <div><span class="icon">🚚</span> DELIVERY</div>
-            <div><span class="icon">🛡️</span> QUALITY</div>
-            <div><span class="icon">💬</span> SUPPORT</div>
-        </div>
-        <p class="copyright">&copy; 2023 ULANS_STORE. All Rights Reserved.</p>
-    </footer>
-
-    <div id="gallery-modal" class="modal" onclick="closeGallery()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-button" onclick="closeGallery()">&times;</span>
-            <img id="modal-main-img" src="" alt="Product Image" class="modal-image">
-
-            <a class="prev-img" onclick="prevImage(event)">&#10094;</a>
-            <a class="next-img" onclick="nextImage(event)">&#10095;</a>
-
-            <div id="gallery-thumbnails" class="thumbnails">
+            <div class="category-item" onclick="showCategory('accessories', 'Аксессуары')">
+                <img src="images/accessories_category.png" alt="Аксессуары">
+                <span>АКСЕССУАРЫ</span>
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=5.2"></script>
+    <div id="product-list" class="view" style="display: none;">
+        <header>
+            <div class="header-content">
+                <div class="title-block">
+                    <h2 id="current-category-title">ТОВАРЫ</h2>
+                </div>
+            </div>
+        </header>
+
+        <div class="filter-buttons">
+            <button id="filter-all" onclick="filterProducts(currentCategoryKey, 'all')" class="active">ВСЕ</button>
+            <button id="filter-stock" onclick="filterProducts(currentCategoryKey, 'stock')">В НАЛИЧИИ</button>
+            <button id="filter-new" onclick="filterProducts(currentCategoryKey, 'new')">NEW</button>
+            <button id="filter-sale" onclick="filterProducts(currentCategoryKey, 'sale')">SALE</button>
+        </div>
+
+        <div id="product-items-container" class="product-grid">
+        </div>
+    </div>
+
+    <div id="gallery-modal" class="modal" onclick="closeGallery()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="closeGallery()">&times;</span>
+            <div class="gallery-controls">
+                <button class="prev-img" onclick="prevImage(event)">&#10094;</button>
+                <img id="modal-main-img" src="" alt="Детальное фото">
+                <button class="next-img" onclick="nextImage(event)">&#10095;</button>
+            </div>
+            <div id="gallery-thumbnails">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <button onclick="goHome()">
+            <img src="images/home_icon.svg" alt="Домой">
+            <span>Категории</span>
+        </button>
+        <button onclick="requestPhotos(-1, 'Общий запрос на фото')">
+            <img src="images/chat_icon.svg" alt="Чат">
+            <span>Чат с U L A N S</span>
+        </button>
+    </footer>
+
+    <script src="app.js"></script>
 </body>
 </html>
