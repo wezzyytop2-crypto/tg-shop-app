@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=5.2 - Автоматический расчет % скидки)
+﻿// app.js (Режим: Telegram Mini App v=5.4 - Авторасчет oldPrice по проценту. Скидка ТОЛЬКО на ZIP-ХУДИ)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null;
@@ -36,13 +36,35 @@ function roundToNearestTen(price) {
 }
 
 
-// 
+// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
 const products = {
 
     hoodies_sweats: [
-       
-        { id: 101, name: "Худи Essentials (Бежевое)", price: 490, oldPrice: 575, size: "XL", description: "Под заказ. Бежевое худи.", images: ["images/essentails.png"], status: "ORDER", isSale: true },
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, discountPercent: 20, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png"], status: "IN STOCK", isSale: true },
+        // 1. БЕЖЕВОЕ ХУДИ (ID 101): БЕЗ СКИДКИ
+        {
+            id: 101,
+            name: "Худи Essentials (Бежевое)",
+            price: 490,
+            size: "XL",
+            description: "Под заказ. Бежевое худи.",
+            images: ["images/essentails.png"],
+            status: "ORDER"
+        },
+
+        // 2. ЧЕРНОЕ ZIP-ХУДИ (ID 102): СО СКИДКОЙ -20%
+        {
+            id: 102,
+            name: "Zip-худи 'Polo Ralph Lauren'",
+            price: 550,
+            discountPercent: 20, // <-- Указываем 20%
+            size: "L (M)",
+            description: "В наличии. Черное зип-худи. СКИДКА -20%!",
+            images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"],
+            status: "IN STOCK",
+            isSale: true // Обязательный флаг
+        },
+
+        // 3. СЕРОЕ ХУДИ (ID 103): БЕЗ СКИДКИ
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Под заказ. Серое зип-худи.", images: ["images/zip-hoodie_burberry.jpg"], status: "ORDER" }
     ],
     t_shirts: [
@@ -100,7 +122,7 @@ function filterProducts(categoryKey, filterType) {
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для процентов скидки) ---
+// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для работы с discountPercent) ---
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -123,7 +145,8 @@ function renderProducts(productsToRender) {
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
         const isOrder = product.status !== 'IN STOCK';
-        const isSale = product.isSale === true && product.oldPrice > product.price; // Проверка на скидку
+        // Проверка на скидку: isSale: true ИЛИ есть discountPercent > 0
+        const isSale = product.isSale === true || (product.discountPercent && product.discountPercent > 0);
 
         const roundedPmrPrice = roundToNearestTen(product.price);
         const rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
@@ -133,22 +156,19 @@ function renderProducts(productsToRender) {
                            '<span class="status-order">ПОД ЗАКАЗ</span>' :
                            '<span class="status-stock">В НАЛИЧИИ</span>';
 
-        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ (ОБНОВЛЕНО ДЛЯ ПРОЦЕНТОВ) ---
+        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ (ОБНОВЛЕНА ДЛЯ discountPercent) ---
         let priceDisplayHtml = '';
         let saleBadgeHtml = '';
 
-        if (isSale) {
-            const roundedOldPmrPrice = roundToNearestTen(product.oldPrice);
+        if (isSale && product.discountPercent && product.discountPercent > 0) {
+            const discount = product.discountPercent;
 
-            // НОВАЯ ЛОГИКА: Расчет процента скидки
-            let discountPercentage = 0;
-            if (product.oldPrice && product.oldPrice > 0) {
-                // % = 100 - (Новая цена / Старая цена) * 100
-                discountPercentage = Math.round(100 - (product.price / product.oldPrice) * 100);
-            }
+            // Расчет старой цены (oldPrice) на основе новой цены и процента
+            const oldPriceRaw = product.price / (1 - (discount / 100));
+            const roundedOldPmrPrice = roundToNearestTen(oldPriceRaw); // Округляем для вывода
 
-            // Формируем текст ярлыка с процентом
-            const badgeText = `-${discountPercentage}%`;
+            // Формируем текст ярлыка
+            const badgeText = `-${discount}%`;
 
             const rawOldMdlPrice = roundedOldPmrPrice * PMR_TO_MDL_RATE;
             const roundedOldMdlPrice = roundToNearestTen(rawOldMdlPrice);
@@ -191,7 +211,9 @@ function renderProducts(productsToRender) {
                 <p><strong>Size:</strong> ${product.size} ${statusText}</p>
                 <p>${product.description}</p>
 
-                ${priceDisplayHtml} <div class="button-group">
+                ${priceDisplayHtml}
+
+                <div class="button-group">
                     <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
                     <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">REQUEST PHOTOS</button>
                 </div>
