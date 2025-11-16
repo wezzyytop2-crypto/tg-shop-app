@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=6.1 - Окончательно исправленный код)
+﻿// app.js (Режим: Telegram Mini App v=6.2 - Добавлены UX-улучшения и проверка статусов)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null; 
@@ -7,7 +7,7 @@ let currentImageIndex = 0;
 // -------------------------------------------------
 
 
-// --- 1. Настройка TWA и Цвета ---
+// --- 1. Настройка TWA и Цвета (ИСПРАВЛЕНО: Установка цвета фона) ---
 const tg = window.Telegram.WebApp;
 tg.ready();
 
@@ -17,8 +17,12 @@ const mainColor = '#404040';
 const buttonTextColor = '#ffffff';
 
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
+const bgColor = tg.themeParams.bg_color || '#ffffff'; // Получаем цвет фона Telegram
 
 tg.setHeaderColor(headerColor);
+// Устанавливаем цвет фона Mini App в соответствии с темой Telegram
+tg.setBackgroundColor(bgColor); 
+
 tg.MainButton.setParams({
     color: mainColor,
     text_color: buttonTextColor
@@ -43,6 +47,12 @@ function isProductNew(product) {
 // --- УТИЛИТА: Проверка статуса "SALE" ---
 function isProductSale(product) {
     return product.isSale === true && product.basePrice && product.discountPercent > 0;
+}
+
+// --- УТИЛИТА: Проверка, доступен ли товар в принципе ---
+function isProductAvailable(product) {
+    // Доступен, если он IN STOCK или доступен под ORDER
+    return product.status === 'IN STOCK' || product.status === 'ORDER';
 }
 
 
@@ -105,7 +115,20 @@ const products = {
         },
     ],
 
-    jackets: [],
+    jackets: [
+         // 4. НЕДОСТУПНЫЙ ТОВАР (Нет в наличии и не под заказ)
+        { 
+            id: 301, 
+            name: "Пуховик 'North Face'", 
+            price: 1500, 
+            size: "L", 
+            description: "Недоступен.", 
+            images: ["images/jacket.png"], 
+            status: "OUT OF STOCK", // Новый статус
+            isNew: false, 
+            newUntil: null
+        },
+    ],
     sneakers: [],
 
     accessories: [
@@ -190,19 +213,16 @@ const products = {
 };
 
 
-// --- 3. ФУНКЦИЯ: ФИЛЬТРАЦИЯ ТОВАРОВ (Теперь открывает категорию и фильтрует) ---
+// --- 3. ФУНКЦИЯ: ФИЛЬТРАЦИЯ ТОВАРОВ ---
 
 function filterProducts(categoryKey, filterType, categoryName = null) {
     
-    // 1. Сохраняем текущую категорию (для кнопок фильтра)
     currentCategoryKey = categoryKey;
     
-    // 2. Скрываем категории, показываем товары
     document.getElementById('category-view').style.display = 'none';
     document.getElementById('product-list').style.display = 'block';
-    document.querySelector('footer').style.display = 'none'; // Скрываем футер
+    document.querySelector('footer').style.display = 'none'; 
     
-    // 3. Устанавливаем заголовок (только если он передан)
     if (categoryName) {
         document.getElementById('current-category-title').textContent = categoryName.toUpperCase();
         document.title = `U L A N S _ S T O R E — ${categoryName}`;
@@ -211,7 +231,6 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
     const allProducts = products[categoryKey] || [];
     let filteredProducts = allProducts;
     
-    // 4. Управление активной кнопкой
     const filterButtons = ['filter-all', 'filter-stock', 'filter-new', 'filter-sale'];
     filterButtons.forEach(id => {
         const btn = document.getElementById(id);
@@ -221,7 +240,6 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
     if(activeBtn) activeBtn.classList.add('active');
 
 
-    // 5. Логика фильтрации
     if (filterType === 'stock') {
         filteredProducts = allProducts.filter(product => product.status === 'IN STOCK');
         
@@ -235,16 +253,14 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         filteredProducts = allProducts;
     }
     
-    // 6. Рендеринг результата
     renderProducts(filteredProducts);
 
-    // 7. Показываем кнопку "Назад" TWA
     tg.MainButton.setText("← НАЗАД К КАТЕГОРИЯМ");
     tg.MainButton.show();
 }
 
 
-    // --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ ---
+    // --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (ИСПРАВЛЕНО: Проверка доступности) ---
 
     function renderProducts(productsToRender) {
         const productsContainer = document.getElementById('product-items-container');
@@ -266,7 +282,8 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         
             const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
-            const isOrder = product.status !== 'IN STOCK';
+            const isAvailable = isProductAvailable(product); // Новая проверка
+            const isOrder = product.status === 'ORDER';
         
             // --- ЛОГИКА СТАТУСОВ ---
             const isSale = isProductSale(product); 
@@ -274,9 +291,14 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
             const isNew = isProductNew(product);
             let newBadgeHtml = '';
         
-            const statusText = isOrder ?
-                               '<span class="status-order">ПОД ЗАКАЗ</span>' :
-                               '<span class="status-stock">В НАЛИЧИИ</span>';
+            let statusText = '';
+            if (product.status === 'IN STOCK') {
+                statusText = '<span class="status-stock">В НАЛИЧИИ</span>';
+            } else if (product.status === 'ORDER') {
+                statusText = '<span class="status-order">ПОД ЗАКАЗ</span>';
+            } else {
+                statusText = '<span class="status-unavailable">НЕДОСТУПЕН</span>'; // Новый статус
+            }
         
             // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКОВ ---
             let priceDisplayHtml = '';
@@ -320,11 +342,15 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
             let imageHtml = '';
             if (imageUrl) {
                 imageHtml = `
-                <div class="product-image-container" onclick='openGallery("${currentCategoryKey}", ${product.id})'>
+                <div class="product-image-container" onclick='${isAvailable ? `openGallery("${currentCategoryKey}", ${product.id})` : ''}'>
                     <img src="${imageUrl}" alt="${product.name}">
                     ${combinedBadgeHtml}
-                    ${isOrder ? `
-                        <div class="product-order-overlay">
+                    ${!isAvailable ? `
+                        <div class="product-unavailable-overlay">
+                            <span class="unavailable-label">НЕДОСТУПЕН</span>
+                        </div>
+                    ` : isOrder ? `
+                         <div class="product-order-overlay">
                             <span class="order-label">ПОД ЗАКАЗ</span>
                         </div>
                     ` : ''}
@@ -332,7 +358,26 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
             `;
             }
         
-            const buyButtonClass = isOrder ? 'buy-button order-button' : 'buy-button';
+            // Логика кнопки
+            let buyButtonText = isOrder ? 'ЗАКАЗАТЬ' : 'КУПИТЬ';
+            let buyButtonHtml;
+        
+            if (isAvailable) {
+                const buyButtonClass = isOrder ? 'buy-button order-button' : 'buy-button';
+                buyButtonHtml = `
+                <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${buyButtonPrice})">
+                    ${buyButtonText}
+                </button>
+            `;
+            } else {
+                // Кнопка недоступна
+                buyButtonHtml = `
+                <button class="buy-button unavailable-button" disabled>
+                    НЕДОСТУПЕН
+                </button>
+            `;
+            }
+
 
             item.innerHTML = `
             ${imageHtml}
@@ -342,7 +387,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
                 <p>${product.description}</p>
                 ${priceDisplayHtml} 
                 <div class="button-group">
-                    <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${buyButtonPrice})">КУПИТЬ / ЗАКАЗАТЬ</button>
+                    ${buyButtonHtml}
                     <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">ЗАПРОСИТЬ ФОТО</button>
                 </div>
             </div>
