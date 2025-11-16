@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=6.2 - Добавлены UX-улучшения и проверка статусов)
+﻿// app.js (Режим: Telegram Mini App v=6.6 - Категория jackets пустая, кнопка возвращена, текст "приобрести")
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null; 
@@ -7,20 +7,17 @@ let currentImageIndex = 0;
 // -------------------------------------------------
 
 
-// --- 1. Настройка TWA и Цвета (ИСПРАВЛЕНО: Установка цвета фона) ---
+// --- 1. Настройка TWA и Цвета ---
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// Цвет Главной кнопки на СЕРЫЙ (#404040)
 const mainColor = '#404040';
-// Цвет текста кнопки на БЕЛЫЙ
 const buttonTextColor = '#ffffff';
 
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
-const bgColor = tg.themeParams.bg_color || '#ffffff'; // Получаем цвет фона Telegram
+const bgColor = tg.themeParams.bg_color || '#ffffff';
 
 tg.setHeaderColor(headerColor);
-// Устанавливаем цвет фона Mini App в соответствии с темой Telegram
 tg.setBackgroundColor(bgColor); 
 
 tg.MainButton.setParams({
@@ -39,7 +36,7 @@ function roundToNearestTen(price) {
     return Math.round(price / 10) * 10;
 }
 
-// --- УТИЛИТА: Проверка статуса "Новинка" (сравнение с текущей датой) ---
+// --- УТИЛИТА: Проверка статуса "Новинка" ---
 function isProductNew(product) {
     return product.isNew && product.newUntil && (new Date(product.newUntil) > Date.now());
 }
@@ -51,7 +48,6 @@ function isProductSale(product) {
 
 // --- УТИЛИТА: Проверка, доступен ли товар в принципе ---
 function isProductAvailable(product) {
-    // Доступен, если он IN STOCK или доступен под ORDER
     return product.status === 'IN STOCK' || product.status === 'ORDER';
 }
 
@@ -60,7 +56,6 @@ function isProductAvailable(product) {
 const products = {
 
     hoodies_sweats: [
-        // 1. БЕЖЕВОЕ ХУДИ (ID 101): ОБЫЧНЫЙ ТОВАР
         { 
             id: 101, 
             name: "Худи Essentials (Бежевое)", 
@@ -72,8 +67,6 @@ const products = {
             isNew: false, 
             newUntil: null 
         }, 
-
-        // 2. ЧЕРНОЕ ZIP-ХУДИ (ID 102): СО СКИДКОЙ -20%
         { 
             id: 102, 
             name: "Zip-худи 'Polo Ralph Lauren'", 
@@ -87,8 +80,6 @@ const products = {
             isNew: false, 
             newUntil: null
         },
-        
-        // 3. СЕРОЕ ХУДИ (ID 103): ОБЫЧНЫЙ ТОВАР
         { 
             id: 103, 
             name: "Zip-худи 'Burberry'", 
@@ -115,20 +106,9 @@ const products = {
         },
     ],
 
-    jackets: [
-         // 4. НЕДОСТУПНЫЙ ТОВАР (Нет в наличии и не под заказ)
-        { 
-            id: 301, 
-            name: "Пуховик 'North Face'", 
-            price: 1500, 
-            size: "L", 
-            description: "Недоступен.", 
-            images: ["images/jacket.png"], 
-            status: "OUT OF STOCK", // Новый статус
-            isNew: false, 
-            newUntil: null
-        },
-    ],
+    // Категория "Куртки" (jackets) - ПУСТО
+    jackets: [], 
+
     sneakers: [],
 
     accessories: [
@@ -161,39 +141,6 @@ const products = {
             size: "110cm", 
             description: "Под заказ. Черный ремень, черная пряжка.", 
             images: ["images/belt_black.png"], 
-            status: "ORDER",
-            isNew: false, 
-            newUntil: null
-        },
-        { 
-            id: 504, 
-            name: "Ремень 'Gucci'", 
-            price: 225, 
-            size: "110cm", 
-            description: "Под заказ. Бежевый ремень, золотая пряжка.", 
-            images: ["images/glasses_black.png"], 
-            status: "ORDER",
-            isNew: false, 
-            newUntil: null
-        },
-        { 
-            id: 505, 
-            name: "Сумка 'Lacoste'", 
-            price: 425, 
-            size: "OS", 
-            description: "Под заказ. Маленькая сумка-мессенджер.", 
-            images: ["images/mini_bag_lacoste_black.png"], 
-            status: "ORDER",
-            isNew: false, 
-            newUntil: null
-        },
-        { 
-            id: 506, 
-            name: "Очки 'Chrome Hearts'", 
-            price: 175, 
-            size: "OS", 
-            description: "Под заказ. Черная оправа.", 
-            images: ["images/glasses_black.png"], 
             status: "ORDER",
             isNew: false, 
             newUntil: null
@@ -260,7 +207,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
 }
 
 
-    // --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (ИСПРАВЛЕНО: Проверка доступности) ---
+    // --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ ---
 
     function renderProducts(productsToRender) {
         const productsContainer = document.getElementById('product-items-container');
@@ -268,6 +215,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         productsContainer.innerHTML = '';
 
         if (productsToRender.length === 0) {
+            // Сообщение для пустой категории или пустого фильтра
             productsContainer.innerHTML = `
             <div class="product-item" style="text-align: center; border: none; padding: 20px;">
                 <h3>Товаров по данному фильтру пока нет 😞</h3>
@@ -282,7 +230,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         
             const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
-            const isAvailable = isProductAvailable(product); // Новая проверка
+            const isAvailable = isProductAvailable(product); 
             const isOrder = product.status === 'ORDER';
         
             // --- ЛОГИКА СТАТУСОВ ---
@@ -297,7 +245,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
             } else if (product.status === 'ORDER') {
                 statusText = '<span class="status-order">ПОД ЗАКАЗ</span>';
             } else {
-                statusText = '<span class="status-unavailable">НЕДОСТУПЕН</span>'; // Новый статус
+                statusText = '<span class="status-unavailable">НЕДОСТУПЕН</span>'; 
             }
         
             // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКОВ ---
@@ -358,7 +306,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
             `;
             }
         
-            // Логика кнопки
+            // Логика кнопки. 
             let buyButtonText = isOrder ? 'ЗАКАЗАТЬ' : 'КУПИТЬ';
             let buyButtonHtml;
         
@@ -370,7 +318,7 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
                 </button>
             `;
             } else {
-                // Кнопка недоступна
+                // Кнопка недоступна (disabled)
                 buyButtonHtml = `
                 <button class="buy-button unavailable-button" disabled>
                     НЕДОСТУПЕН
@@ -397,10 +345,11 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
     }
 
 
-    // --- 6. Функционал: Обработка действия "Купить" ---
+    // --- 6. Функционал: Обработка действия "Купить" (Измененный текст) ---
     function buyProduct(id, name, price) {
         const sellerUsername = 'ulans_sttore';
-        const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
+        // ФИНАЛЬНЫЙ ТЕКСТ: "Хочу приобрести товар"
+        const messageText = encodeURIComponent(`Здравствуйте! Хочу приобрести товар: ${name} (ID: ${id}) за ${price} ПМР.`);
         const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
         if (tg && tg.openTelegramLink) {
