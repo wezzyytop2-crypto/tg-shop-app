@@ -1,21 +1,14 @@
-﻿// app.js (Режим: Telegram Mini App v=5.5 - Скидка рассчитывается ОТ basePrice. Дизайн - СЕТКА)
-
-// --- Глобальные переменные состояния ---
+﻿
 let currentCategoryKey = null;
 let currentGalleryImages = [];
 let currentImageIndex = 0;
-// -------------------------------------------------
 
-
-// --- 1. Настройка TWA и Цвета ---
 const tg = window.Telegram.WebApp;
 tg.ready();
 
-// Цвет Главной кнопки на СЕРЫЙ (#404040)
-const mainColor = '#404040';
-// Цвет текста кнопки на БЕЛЫЙ
-const buttonTextColor = '#ffffff';
 
+const mainColor = '#404040';
+const buttonTextColor = '#ffffff';
 const headerColor = tg.themeParams.header_bg_color || '#ffffff';
 
 tg.setHeaderColor(headerColor);
@@ -23,25 +16,25 @@ tg.MainButton.setParams({
     color: mainColor,
     text_color: buttonTextColor
 });
-// ---------------------------------
 
 
-// --- 0. НАСТРОЙКИ КУРСА ВАЛЮТ ---
+
+
 const PMR_TO_MDL_RATE = 1 / 0.94;
-// ---------------------------------
 
-// --- ФУНКЦИЯ ОКРУГЛЕНИЯ ЦЕНЫ ---
+
+
 function roundToNearestTen(price) {
-    // Округляет цену до ближайшего десятка
+  
     return Math.round(price / 10) * 10;
 }
 
 
-// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР). Параметры в столбик для удобства ---
+
 const products = {
 
     hoodies_sweats: [
-        // 1. БЕЖЕВОЕ ХУДИ (ID 101): БЕЗ СКИДКИ
+        
         {
             id: 101,
             name: "Худи Essentials (Бежевое)",
@@ -52,20 +45,20 @@ const products = {
             status: "ORDER"
         },
 
-        // 2. ЧЕРНОЕ ZIP-ХУДИ (ID 102): СО СКИДКОЙ -20%
+        
         {
             id: 102,
             name: "Zip-худи 'Polo Ralph Lauren'",
-            basePrice: 550,          // <-- СТАРАЯ ЦЕНА (Базовая)
-            discountPercent: 20,     // <-- Скидка 20%
+            basePrice: 550,          // старая цена
+            discountPercent: 20,     // скидка
             size: "L (M)",
             description: "В наличии. Черное зип-худи. СКИДКА -20%!",
             images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"],
             status: "IN STOCK",
-            isSale: true // Флаг для включения логики скидки
+            isSale: true // флаг для логики скидки
         },
 
-        // 3. СЕРОЕ ХУДИ (ID 103): БЕЗ СКИДКИ
+       
         {
             id: 103,
             name: "Zip-худи 'Burberry'",
@@ -159,7 +152,7 @@ const products = {
 };
 
 
-// --- 3. Функционал: Отображение товаров ---
+
 
 function showCategory(categoryKey, categoryName) {
     currentCategoryKey = categoryKey;
@@ -176,7 +169,7 @@ function showCategory(categoryKey, categoryName) {
 }
 
 
-// --- 4. ФУНКЦИЯ: ФИЛЬТРАЦИЯ ТОВАРОВ ---
+
 
 function filterProducts(categoryKey, filterType) {
     const allProducts = products[categoryKey] || [];
@@ -186,7 +179,7 @@ function filterProducts(categoryKey, filterType) {
         filteredProducts = allProducts.filter(product => product.status === 'IN STOCK');
         document.getElementById('filter-all').classList.remove('active');
         document.getElementById('filter-stock').classList.add('active');
-    } else { // 'all'
+    } else { 
         filteredProducts = allProducts;
         document.getElementById('filter-all').classList.add('active');
         document.getElementById('filter-stock').classList.remove('active');
@@ -195,7 +188,7 @@ function filterProducts(categoryKey, filterType) {
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для работы с basePrice) ---
+
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -218,7 +211,7 @@ function renderProducts(productsToRender) {
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
         const isOrder = product.status !== 'IN STOCK';
-        // Проверка на скидку: isSale: true И есть basePrice, discountPercent
+     
         const isSale = product.isSale === true && product.basePrice && product.discountPercent > 0;
 
 
@@ -226,11 +219,11 @@ function renderProducts(productsToRender) {
                            '<span class="status-order">ПОД ЗАКАЗ</span>' :
                            '<span class="status-stock">В НАЛИЧИИ</span>';
 
-        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ ---
+        
         let priceDisplayHtml = '';
         let saleBadgeHtml = '';
 
-        let actualPrice; // Фактическая (новая) цена
+        let actualPrice; 
         let roundedPmrPrice;
         let rawMdlPrice;
         let roundedMdlPrice;
@@ -239,18 +232,18 @@ function renderProducts(productsToRender) {
             const basePrice = product.basePrice;
             const discount = product.discountPercent;
 
-            // 1. Расчет НОВОЙ ЦЕНЫ: Actual Price = Base Price * (1 - Discount / 100)
+            
             actualPrice = basePrice * (1 - (discount / 100));
 
-            // 2. Округление и конвертация для отображения
+            
             roundedPmrPrice = roundToNearestTen(actualPrice);
             rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
             roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
-            // Старая цена для отображения
+            
             const roundedOldPmrPrice = roundToNearestTen(basePrice);
 
-            // Формируем ярлык и HTML
+            
             const badgeText = `-${discount}%`;
             const rawOldMdlPrice = roundedOldPmrPrice * PMR_TO_MDL_RATE;
             const roundedOldMdlPrice = roundToNearestTen(rawOldMdlPrice);
@@ -264,18 +257,17 @@ function renderProducts(productsToRender) {
                 </p>
             `;
 
-            // --- Если товар без скидки, используем стандартную логику (price) ---
-        } else {
-            actualPrice = product.price || 0; // Используем 'price'
+            
+            actualPrice = product.price || 0; 
             roundedPmrPrice = roundToNearestTen(actualPrice);
             rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
             roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
             priceDisplayHtml = `<p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>`;
         }
-        // ------------------------------------------
+       
 
-        // Для кнопки "Купить" используем фактическую цену, которая была рассчитана (roundedPmrPrice)
+        
         const buyButtonPrice = roundedPmrPrice;
 
 
@@ -316,10 +308,10 @@ function renderProducts(productsToRender) {
 }
 
 
-// --- 6. Функционал: Обработка действия "Купить" ---
+
 function buyProduct(id, name, price) {
     const sellerUsername = 'ulans_sttore';
-    // В сообщении указываем рассчитанную цену (price)
+    
     const messageText = encodeURIComponent(`Здравствуйте! Хочу заказать товар: ${name} (ID: ${id}) за ${price} ПМР.`);
     const telegramUrl = `https://t.me/${sellerUsername}?text=${messageText}`;
 
@@ -330,7 +322,7 @@ function buyProduct(id, name, price) {
     }
 }
 
-// --- 7. Функционал: Обработка действия "Запросить детальные фото" ---
+
 function requestPhotos(id, name) {
     const sellerUsername = 'ulans_sttore';
     const messageText = encodeURIComponent(`Здравствуйте! Можно попросить детальные фото товара: ${name} (ID: ${id}). Спасибо!`);
@@ -344,7 +336,7 @@ function requestPhotos(id, name) {
 }
 
 
-// --- 8. Функционал: TWA MainButton (Кнопка "Назад") ---
+
 tg.MainButton.onClick(goBack);
 
 function goBack() {
@@ -356,13 +348,13 @@ function goBack() {
     tg.MainButton.hide();
 }
 
-// --- 9. Функционал: Кнопка "Домой" ---
+
 function goHome() {
     goBack();
 }
 
 
-// --- 10. ФУНКЦИОНАЛ: ГАЛЕРЕЯ ---
+
 function openGallery(productKey, productId) {
     const category = products[productKey];
     const product = category.find(p => p.id === productId);
