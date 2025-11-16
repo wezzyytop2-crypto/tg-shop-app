@@ -103,14 +103,14 @@ h2 {
     padding-bottom: 0;
 }
 
-/* --- НОВЫЕ СТИЛИ: Кнопки фильтрации --- */
+/* --- СТИЛИ: Кнопки фильтрации --- */
 #filter-buttons {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
     padding-bottom: 10px;
-    flex-wrap: wrap; /* Для переноса на маленьких экранах */
+    flex-wrap: wrap;
 }
 
 .filter-button {
@@ -229,7 +229,7 @@ h2 {
     right: 10px;
 }
 
-/* НОВЫЙ СТИЛЬ: Ярлык NEW (Зеленый) */
+/* СТИЛЬ: Ярлык NEW (Зеленый) */
 .new-badge {
     background-color: #00a800; /* Зеленый */
     left: 10px;
@@ -330,23 +330,23 @@ h2 {
         transition: background-color 0.2s, color 0.2s;
     }
 
-/* Кнопка "BUY" (Светлая/Outlined) */
+/* ИСПРАВЛЕНО: Кнопка "КУПИТЬ/ЗАКАЗАТЬ" - Белый фон, Черный текст (Как на вашем скриншоте) */
 .buy-button {
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
     border: 1px solid var(--tg-theme-text-color, #000000);
+    border-right: none; /* Убираем, чтобы был один разделитель */
 }
 
     .buy-button:hover {
         background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
     }
 
-/* Кнопка "PHOTO" (Темная/Залитая) */
+/* ИСПРАВЛЕНО: Кнопка "ЗАПРОСИТЬ ФОТО" - Черный фон, Белый текст */
 .photo-button {
     background-color: var(--tg-theme-text-color, #000000);
     color: var(--tg-theme-bg-color, #ffffff);
     border: 1px solid var(--tg-theme-text-color, #000000);
-    border-left: none;
 }
 
     .photo-button:hover {
@@ -354,7 +354,7 @@ h2 {
         border-color: var(--tg-theme-hint-color, #333333);
     }
 
-/* Стиль кнопки "BUY" для товара "ПОД ЗАКАЗ" (Серая) */
+/* Стиль кнопки "BUY" для товара "ПОД ЗАКАЗ" (Серый) */
 .buy-button.order-button {
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-hint-color, #999999);

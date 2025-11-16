@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U L A N S _ СТОР | Fashion Store</title>
+    <title>U L A N S _ S T O R E | Fashion Store</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=5.9">
+    <link rel="stylesheet" href="style.css?v=6.0">
 </head>
 <body>
 
     <header>
         <div id="shop-header">
             <a href="#" onclick="goHome()" class="header-title-link">
-                <h1>U L A N S _ СТОР</h1>
+                <h1>U L A N S _ S T O R E</h1>
             </a>
         </div>
     </header>
@@ -29,11 +29,11 @@
 
             <h2>Categories</h2>
             <div id="categories">
-                <button class="category-button" onclick="showCategory('hoodies_sweats', 'Худи и Свитшоты')">HOODIES</button>
-                <button class="category-button" onclick="showCategory('t_shirts', 'Футболки')">T-SHIRTS</button>
-                <button class="category-button" onclick="showCategory('jackets', 'Куртки')">JACKETS</button>
-                <button class="category-button" onclick="showCategory('sneakers', 'Обувь')">SNEAKERS</button>
-                <button class="category-button" onclick="showCategory('accessories', 'Аксессуары')">ACCESSORIES</button>
+                <button class="category-button" onclick="filterProducts('hoodies_sweats', 'all', 'Худи и Свитшоты')">HOODIES</button>
+                <button class="category-button" onclick="filterProducts('t_shirts', 'all', 'Футболки')">T-SHIRTS</button>
+                <button class="category-button" onclick="filterProducts('jackets', 'all', 'Куртки')">JACKETS</button>
+                <button class="category-button" onclick="filterProducts('sneakers', 'all', 'Обувь')">SNEAKERS</button>
+                <button class="category-button" onclick="filterProducts('accessories', 'all', 'Аксессуары')">ACCESSORIES</button>
             </div>
         </div>
 
@@ -76,6 +76,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=5.9"></script>
+    <script src="app.js?v=6.0"></script>
 </body>
 </html>
