@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=5.0 - Исправление кнопок для тем)
+﻿// app.js (Режим: Telegram Mini App v=5.2 - Автоматический расчет % скидки)
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null;
@@ -36,12 +36,13 @@ function roundToNearestTen(price) {
 }
 
 
-// --- 2. Данные: Список ваших товаров (ЦЕНЫ В ПМР) ---
+// 
 const products = {
 
     hoodies_sweats: [
-        { id: 101, name: "Худи Essentials (Бежевое)", price: 575, size: "XL", description: "Под заказ. Бежевое худи.", images: ["images/essentails.png"], status: "ORDER" },
-        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"], status: "IN STOCK" },
+       
+        { id: 101, name: "Худи Essentials (Бежевое)", price: 490, oldPrice: 575, size: "XL", description: "Под заказ. Бежевое худи.", images: ["images/essentails.png"], status: "ORDER", isSale: true },
+        { id: 102, name: "Zip-худи 'Polo Ralph Lauren'", price: 550, discountPercent: 20, size: "L (M)", description: "В наличии. Черное зип-худи.", images: ["images/zip-hoofie_ralph.png"], status: "IN STOCK", isSale: true },
         { id: 103, name: "Zip-худи 'Burberry'", price: 625, size: "XL", description: "Под заказ. Серое зип-худи.", images: ["images/zip-hoodie_burberry.jpg"], status: "ORDER" }
     ],
     t_shirts: [
@@ -99,7 +100,7 @@ function filterProducts(categoryKey, filterType) {
 }
 
 
-// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ ---
+// --- 5. ФУНКЦИЯ: РЕНДЕРИНГ ТОВАРОВ (Обновлено для процентов скидки) ---
 
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById('product-items-container');
@@ -121,22 +122,57 @@ function renderProducts(productsToRender) {
 
         const imageUrl = product.images && product.images.length > 0 ? baseUrl + product.images[0] : null;
 
+        const isOrder = product.status !== 'IN STOCK';
+        const isSale = product.isSale === true && product.oldPrice > product.price; // Проверка на скидку
+
         const roundedPmrPrice = roundToNearestTen(product.price);
         const rawMdlPrice = roundedPmrPrice * PMR_TO_MDL_RATE;
         const roundedMdlPrice = roundToNearestTen(rawMdlPrice);
 
-        const isOrder = product.status !== 'IN STOCK';
-
         const statusText = isOrder ?
                            '<span class="status-order">ПОД ЗАКАЗ</span>' :
                            '<span class="status-stock">В НАЛИЧИИ</span>';
+
+        // --- 5.1. ЛОГИКА ЦЕНЫ И ЯРЛЫКА СКИДКИ (ОБНОВЛЕНО ДЛЯ ПРОЦЕНТОВ) ---
+        let priceDisplayHtml = '';
+        let saleBadgeHtml = '';
+
+        if (isSale) {
+            const roundedOldPmrPrice = roundToNearestTen(product.oldPrice);
+
+            // НОВАЯ ЛОГИКА: Расчет процента скидки
+            let discountPercentage = 0;
+            if (product.oldPrice && product.oldPrice > 0) {
+                // % = 100 - (Новая цена / Старая цена) * 100
+                discountPercentage = Math.round(100 - (product.price / product.oldPrice) * 100);
+            }
+
+            // Формируем текст ярлыка с процентом
+            const badgeText = `-${discountPercentage}%`;
+
+            const rawOldMdlPrice = roundedOldPmrPrice * PMR_TO_MDL_RATE;
+            const roundedOldMdlPrice = roundToNearestTen(rawOldMdlPrice);
+
+            // Используем рассчитанный текст в ярлыке
+            saleBadgeHtml = `<div class="product-badge sale-badge">${badgeText}</div>`;
+
+            priceDisplayHtml = `
+                <p class="price-display">
+                    <span class="old-price">${roundedOldPmrPrice} PMR / ~${roundedOldMdlPrice} MDL</span>
+                    <strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL
+                </p>
+            `;
+        } else {
+            priceDisplayHtml = `<p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>`;
+        }
+        // ------------------------------------------
 
         let imageHtml = '';
         if (imageUrl) {
             imageHtml = `
                 <div class="product-image-container" onclick='openGallery("${currentCategoryKey}", ${product.id})'>
                     <img src="${imageUrl}" alt="${product.name}">
-                    ${isOrder ? `
+                    ${saleBadgeHtml} ${isOrder ? `
                         <div class="product-order-overlay">
                             <span class="order-label">ПОД ЗАКАЗ</span>
                         </div>
@@ -155,9 +191,7 @@ function renderProducts(productsToRender) {
                 <p><strong>Size:</strong> ${product.size} ${statusText}</p>
                 <p>${product.description}</p>
 
-                <p class="price-display"><strong>${roundedPmrPrice} PMR</strong> / ~${roundedMdlPrice} MDL</p>
-
-                <div class="button-group">
+                ${priceDisplayHtml} <div class="button-group">
                     <button class="${buyButtonClass}" onclick="buyProduct(${product.id}, \`${product.name}\`, ${roundedPmrPrice})">BUY / ORDER</button>
                     <button class="photo-button" onclick="requestPhotos(${product.id}, \`${product.name}\`)">REQUEST PHOTOS</button>
                 </div>
