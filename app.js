@@ -71,7 +71,7 @@ const products = {
             discountPercent: 20,     
             size: "L (M)", 
             description: "В наличии. Черное зип-худи. СКИДКА -20%!", 
-            images: ["images/zip-hoofie_ralph.png", "images/zip-hoodie_burberry.jpg"], 
+            images: ["images/zip-hoofie_ralph.png"], 
             status: "IN STOCK", 
             isSale: true,
             isNew: false, 
@@ -466,4 +466,4 @@ function filterProducts(categoryKey, filterType, categoryName = null) {
         if (event) event.stopPropagation();
         currentImageIndex = (currentImageIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
         renderGallery();
-    }
+    }}
