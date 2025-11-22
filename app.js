@@ -1,4 +1,4 @@
-﻿// app.js (Режим: Telegram Mini App v=6.6 - Категория jackets пустая, кнопка возвращена, текст "приобрести")
+﻿// app.js (Режим: Telegram Mini App v=6.7 - Категория jackets пустая, кнопка возвращена, текст "приобрести")
 
 // --- Глобальные переменные состояния ---
 let currentCategoryKey = null; 

@@ -120,7 +120,7 @@ h2 {
     font-weight: 600;
     text-transform: uppercase;
     border: 1px solid var(--tg-theme-hint-color, #999999);
-    border-radius: 0;
+    border-radius: 4px; /* УЛУЧШЕНИЕ */
     background-color: transparent;
     color: var(--tg-theme-hint-color, #555555);
     cursor: pointer;
@@ -167,7 +167,7 @@ h2 {
     padding: 12px 10px;
     font-size: 0.9em;
     border: 1px solid var(--tg-theme-text-color, #000000);
-    border-radius: 0;
+    border-radius: 4px; /* УЛУЧШЕНИЕ */
     background-color: transparent;
     color: var(--tg-theme-text-color, #000000);
     font-weight: 600;
@@ -206,11 +206,17 @@ h2 {
 .product-item {
     background-color: var(--tg-theme-secondary-bg-color, #ffffff);
     padding: 0;
-    border-radius: 0;
-    box-shadow: none;
+    border-radius: 5px; /* УЛУЧШЕНИЕ: Скругление углов */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* УЛУЧШЕНИЕ: Легкая тень */
     border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
     position: relative;
+    transition: transform 0.2s, box-shadow 0.2s; /* УЛУЧШЕНИЕ: Анимация для ховера */
 }
+
+    .product-item:hover { /* УЛУЧШЕНИЕ: Эффект при наведении */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    }
 
 /* --- Контейнер изображения и оверлей --- */
 .product-image-container {
@@ -256,6 +262,7 @@ h2 {
     align-items: center;
     z-index: 5;
     pointer-events: none;
+    border-radius: 5px 5px 0 0; /* УЛУЧШЕНИЕ: Скругление углов */
 }
 
 .order-label {
@@ -266,6 +273,7 @@ h2 {
     font-weight: 700;
     text-transform: uppercase;
     border: 2px solid var(--tg-theme-text-color, #000000);
+    border-radius: 3px; /* УЛУЧШЕНИЕ */
 }
 
 /* --- СТИЛЬ: Оверлей "НЕДОСТУПЕН" --- */
@@ -281,6 +289,7 @@ h2 {
     align-items: center;
     z-index: 5;
     pointer-events: none;
+    border-radius: 5px 5px 0 0; /* УЛУЧШЕНИЕ: Скругление углов */
 }
 
 .unavailable-label {
@@ -291,6 +300,7 @@ h2 {
     font-weight: 700;
     text-transform: uppercase;
     border: 2px solid #ffffff;
+    border-radius: 3px; /* УЛУЧШЕНИЕ */
 }
 
 
@@ -298,7 +308,7 @@ h2 {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 0;
+    border-radius: 5px 5px 0 0; /* УЛУЧШЕНИЕ: Скругление только верхних углов */
     border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
 }
 
@@ -369,6 +379,7 @@ h2 {
     color: var(--tg-theme-text-color, #000000);
     border: 1px solid var(--tg-theme-text-color, #000000);
     border-right: none;
+    border-radius: 0 0 0 5px; /* УЛУЧШЕНИЕ: Нижний левый угол */
 }
 
     .buy-button:hover {
@@ -380,6 +391,7 @@ h2 {
     background-color: var(--tg-theme-text-color, #000000);
     color: var(--tg-theme-bg-color, #ffffff);
     border: 1px solid var(--tg-theme-text-color, #000000);
+    border-radius: 0 0 5px 0; /* УЛУЧШЕНИЕ: Нижний правый угол */
 }
 
     .photo-button:hover {
@@ -393,6 +405,7 @@ h2 {
     color: var(--tg-theme-hint-color, #999999);
     border: 1px solid var(--tg-theme-hint-color, #999999);
     opacity: 0.8;
+    border-radius: 0 0 0 5px; /* УЛУЧШЕНИЕ: Нижний левый угол */
 }
 
 /* НОВЫЙ СТИЛЬ: Кнопка "НЕДОСТУПЕН" */
@@ -402,6 +415,7 @@ h2 {
     border: 1px solid var(--tg-theme-hint-color, #999999) !important;
     cursor: not-allowed;
     opacity: 0.6;
+    border-radius: 0 0 0 5px !important; /* УЛУЧШЕНИЕ */
 }
 
     .unavailable-button:hover {
@@ -420,9 +434,9 @@ footer {
     background-color: var(--tg-theme-secondary-bg-color, #ffffff);
     color: var(--tg-theme-hint-color, #666666);
     padding: 15px 20px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1); /* УЛУЧШЕНИЕ: Усиленная тень */
     z-index: 100;
-    border-top: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+    border-top: none;
     text-align: center;
 }
 
